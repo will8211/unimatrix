@@ -209,6 +209,8 @@ start_color = colors_str[args.color]
 speed = args.speed
 start_delay = (100-speed)*10
 
+runtime = None
+
 if args.time:
     runtime = args.time
 
