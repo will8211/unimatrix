@@ -53,7 +53,7 @@ OPTIONAL ARGUMENTS
   -c COLOR             One of: green (default), red, blue, white, yellow, cyan,
                        magenta, black
 
-  -h                   Show this help message and exit.
+  -h                   Show this help message and exit
 
   -l CHARACTER_LIST    Select character set(s) using a string over letter
                        codes (see CHARACTER SETS below.)
@@ -66,9 +66,11 @@ OPTIONAL ARGUMENTS
                        refreshing, 100 uses none. Use negative numbers for 
                        even lower speeds. Default=85
 
+  -t TIME              Exit the process after TIME seconds
+
   -u CUSTOM_CHARACTERS Your own string of characters to display. Enclose in
                        single quotes ('') to escape special characters. For
-                       example: -u '#$('.
+                       example: -u '#$('
 
 LONG ARGUMENTS
   -b --all-bold
@@ -78,6 +80,7 @@ LONG ARGUMENTS
   -s --speed=SPEED
   -n --no-bold
   -o --status-off
+  -t --time
   -u --custom_characters=CUSTOM_CHARACTERS
 
 CHARACTER SETS
