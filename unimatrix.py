@@ -26,6 +26,7 @@
 
 import curses
 import argparse
+import time
 from random import randint, choice
 
 help_msg = '''
@@ -39,7 +40,7 @@ OPTIONAL ARGUMENTS
   -c COLOR             One of: green (default), red, blue, white, yellow, cyan,
                        magenta, black
 
-  -h                   Show this help message and exit.
+  -h                   Show this help message and exit
 
   -l CHARACTER_LIST    Select character set(s) using a string over letter
                        codes (see CHARACTER SETS below.)
@@ -52,9 +53,11 @@ OPTIONAL ARGUMENTS
                        refreshing, 100 uses none. Use negative numbers for
                        even lower speeds. Default=85
 
+  -t TIME              Exit the process after TIME seconds
+
   -u CUSTOM_CHARACTERS Your own string of characters to display. Enclose in
                        single quotes ('') to escape special characters. For
-                       example: -u '#$('.
+                       example: -u '#$('
 
   -w                   Single-wave mode: Does a single burst of green rain,
                        exits. You can put in a .bashrc file to run when your
@@ -68,6 +71,7 @@ LONG ARGUMENTS
   -s --speed=SPEED
   -n --no-bold
   -o --status-off
+  -t --time
   -u --custom_characters=CUSTOM_CHARACTERS
   -w --single_wave
 
@@ -153,6 +157,9 @@ parser.add_argument('-s', '--speed',
                     help='speed, integer up to 100. Default=85',
                     default=85,
                     type=int)
+parser.add_argument('-t', '--time',
+                    help='time. See details below',
+                    type=int)
 parser.add_argument('-u', '--custom-characters',
                     help='your own string of characters to display',
                     default='',
@@ -201,6 +208,9 @@ colors_str = {
 start_color = colors_str[args.color]
 speed = args.speed
 start_delay = (100-speed)*10
+
+if args.time:
+    runtime = args.time
 
 # "-l" option has been used
 if args.character_list:
@@ -532,11 +542,15 @@ def main(screen):
     if args.single_wave:
         wave_delay = 10 #prevent single_wave mode from shutting down too early
 
+    starttime = time.time()
+
     #Keep restarting however many times the screen resizes
     while True:
         canvas = Canvas(screen)
         #Loop to draw the green rain
         while canvas.size_changed == False:
+            if runtime and time.time() - starttime > runtime:
+                exit()
             #Catch keypress
             if key.get():
                 continue
