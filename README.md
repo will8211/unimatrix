@@ -45,7 +45,7 @@ Emulating CMatrix (```unimatrix -n -s 96 -l 'o'```):
 ```
 USAGE
   unimatrix [-b] [-c COLOR] [-h] [-l CHARACTER_LIST] [-n] [-o] [-s SPEED]
-            [-u CUSTOM_CHARACTERS]
+            [-u CUSTOM_CHARACTERS] [-w]
 
 OPTIONAL ARGUMENTS
   -b                   Use only bold characters
@@ -62,13 +62,17 @@ OPTIONAL ARGUMENTS
 
   -o                   Disable on-screen status
 
-  -s SPEED             Integer up to 100. 0 uses a one-second delay before 
-                       refreshing, 100 uses none. Use negative numbers for 
+  -s SPEED             Integer up to 100. 0 uses a one-second delay before
+                       refreshing, 100 uses none. Use negative numbers for
                        even lower speeds. Default=85
 
   -u CUSTOM_CHARACTERS Your own string of characters to display. Enclose in
                        single quotes ('') to escape special characters. For
                        example: -u '#$('.
+
+  -w                   Single-wave mode: Does a single burst of green rain,
+                       exits. You can put in a .bashrc file to run when your
+                       terminal launches. Works well with speed at 95.
 
 LONG ARGUMENTS
   -b --all-bold
@@ -79,6 +83,7 @@ LONG ARGUMENTS
   -n --no-bold
   -o --status-off
   -u --custom_characters=CUSTOM_CHARACTERS
+  -w --single_wave
 
 CHARACTER SETS
   When using '-l' or '--character_list=' option, follow it with one or more of
