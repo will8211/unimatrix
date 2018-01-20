@@ -493,13 +493,13 @@ class Writer:
 
         try:
             #Draw the character
-            self.screen.addch(y, x, character, color|attr)
+            self.screen.addstr(y, x, character, color|attr)
             if node.white:
                 if node.last_char:
                     #If it's a white node, also write a green character above
                     #to overwrite last white character
                     attr = self.get_attr(node, above=True)
-                    self.screen.addch(y-1, x, node.last_char,
+                    self.screen.addstr(y-1, x, node.last_char,
                                       self.fg_color|attr)
                 node.last_char = character
         except curses.error:
