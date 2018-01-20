@@ -62,7 +62,7 @@ OPTIONAL ARGUMENTS
 
   -o                   Disable on-screen status
 
-  -s SPEED             Speed, from 0 to 100. 100 uses a one-second delay
+  -s SPEED             Speed, from 0 to 100. 0 uses a one-second delay
                        before refreshing, 100 uses none. Use negative numbers
                        for even lower speeds.
                        Default=85
