@@ -22,7 +22,7 @@
 # <http://www.gnu.org/licenses/> for more details.
 #
 # Created by William Mannard
-# 2017/01/19
+# 2018/01/19
 
 import curses
 import argparse
