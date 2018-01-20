@@ -1,4 +1,4 @@
-# unimatrix
+# UniMatrix
 
 Python script to simulate the display from "The Matrix" in terminal. Uses half-width katakana unicode characters by default, but can use custom character sets. Accepts keyboard controls while running.
 
@@ -6,7 +6,7 @@ Based on CMatrix by Chris Allegretta and Abishek V. Ashok. The following option 
 ```
 $ unimatrix -n -s 96 -l o
 ```
-## INSTALLATION
+### Install
 
 You can use curl to install:
 ```
@@ -19,10 +19,18 @@ sudo wget https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.
 sudo chmod a+rx /usr/local/bin/unimatrix
 ```
 
-## USAGE
+### Screenshots
+
+![screenshot1](/screenshot1.png?raw=true "Default")
+![screenshot2](/screenshot2.png?raw=true "Custom character set")
+![screenshot3](/screenshot3.png?raw=true "Alternate character set: Emoji")
+![screenshot4](/screenshot4.png?raw=true "Emulating CMatrix")
+
+### Manual
 ```
-unimatrix [-b] [-c COLOR] [-h] [-l CHARACTER_LIST] [-n] [-o] [-s SPEED]
-          [-u CUSTOM_CHARACTERS]
+USAGE
+  unimatrix [-b] [-c COLOR] [-h] [-l CHARACTER_LIST] [-n] [-o] [-s SPEED]
+            [-u CUSTOM_CHARACTERS]
 
 OPTIONAL ARGUMENTS
   -b                   Use only bold characters
@@ -112,7 +120,7 @@ EXAMPLES
     $ unimatrix -n -l ens -s 50
 ```
 
-## LICENSE
+### License
 
 Unimatrix is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
