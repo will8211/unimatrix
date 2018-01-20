@@ -62,10 +62,9 @@ OPTIONAL ARGUMENTS
 
   -o                   Disable on-screen status
 
-  -s SPEED             Speed, from 0 to 100. 0 uses a one-second delay
-                       before refreshing, 100 uses none. Use negative numbers
-                       for even lower speeds.
-                       Default=85
+  -s SPEED             Integer up to 100. 0 uses a one-second delay before 
+                       refreshing, 100 uses none. Use negative numbers for 
+                       even lower speeds. Default=85
 
   -u CUSTOM_CHARACTERS Your own string of characters to display. Enclose in
                        single quotes ('') to escape special characters. For
