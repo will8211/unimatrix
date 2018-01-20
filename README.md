@@ -1,10 +1,8 @@
 # unimatrix
-Python script to simulate the display from "The Matrix" in terminal. Uses 
-half-width katakana unicode characters by default, but can use custom character 
-sets. Accepts keyboard controls while running.
 
-Based on CMatrix by Chris Allegretta and Abishek V. Ashok. The following option 
-should produce virtually the same output as CMatrix:
+Python script to simulate the display from "The Matrix" in terminal. Uses half-width katakana unicode characters by default, but can use custom character sets. Accepts keyboard controls while running.
+
+Based on CMatrix by Chris Allegretta and Abishek V. Ashok. The following option should produce virtually the same output as CMatrix:
 ```
 $ unimatrix -n -s 96 -l o
 ```
@@ -23,10 +21,10 @@ sudo chmod a+rx /usr/local/bin/unimatrix
 
 ## USAGE
 ```
-  unimatrix [-b] [-c COLOR] [-h] [-l CHARACTER_LIST] [-n] [-o] [-s SPEED]
-            [-u CUSTOM_CHARACTERS]
+unimatrix [-b] [-c COLOR] [-h] [-l CHARACTER_LIST] [-n] [-o] [-s SPEED]
+          [-u CUSTOM_CHARACTERS]
 
-#OPTIONAL ARGUMENTS
+OPTIONAL ARGUMENTS
   -b                   Use only bold characters
 
   -c COLOR             One of: green (default), red, blue, white, yellow, cyan,
@@ -50,7 +48,7 @@ sudo chmod a+rx /usr/local/bin/unimatrix
                        single quotes ('') to escape special characters. For
                        example: -u '#$('.
 
-#LONG ARGUMENTS
+LONG ARGUMENTS
   -b --all-bold
   -c --color=COLOR
   -h --help
@@ -60,7 +58,7 @@ sudo chmod a+rx /usr/local/bin/unimatrix
   -o --status-off
   -u --custom_characters=CUSTOM_CHARACTERS
 
-#CHARACTER SETS
+CHARACTER SETS
   When using '-l' or '--character_list=' option, follow it with one or more of
   the following letters:
 
@@ -87,7 +85,7 @@ sudo chmod a+rx /usr/local/bin/unimatrix
   letter multiple times to increase the frequency of the character set. For
   example, the default setting is equal to '-l knnssss'.
 
-#KEYBOARD CONTROL
+KEYBOARD CONTROL
   SPACE, CTRL-c or q   exit
   - or LEFT            decrease speed by 1
   + or RIGHT           increase speed by 1
@@ -99,7 +97,7 @@ sudo chmod a+rx /usr/local/bin/unimatrix
                                   (5) Yellow  (6) Cyan    (7) Magenta (8) Black
   o                    toggle on-screen status
 
-#EXAMPLES
+EXAMPLES
   Mimic default output of cmatrix (no unicode characters, works in TTY):
     $ unimatrix -n -s 96 -l o
 
