@@ -6,7 +6,7 @@ Based on CMatrix by Chris Allegretta and Abishek V. Ashok. The following option 
 ```
 $ unimatrix -n -s 96 -l o
 ```
-### Install
+## Install
 
 You can use curl to install:
 ```
@@ -19,24 +19,28 @@ sudo wget https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.
 sudo chmod a+rx /usr/local/bin/unimatrix
 ```
 
-### Screenshots
+## Screenshots
 
 ![screenshot1](/screenshot1.png?raw=true "Default")
 Default settings
+
 
 ![screenshot2](/screenshot2.png?raw=true "Custom character set")
 Blue with custom character set 'Linux'
 ```unimatrix -c blue -u 'Linux'```
 
+
 ![screenshot3](/screenshot3.png?raw=true "Alternate character set: Emoji")
 Yellow with Alternate character set: Emoji 
 ```unimatrix -c yellow -l 'e'```
+
 
 ![screenshot4](/screenshot4.png?raw=true "Emulating CMatrix")
 Emulating CMatrix
 ```unimatrix -n -s 96 -l 'o'```
 
-### Manual
+
+## Manual
 ```
 USAGE
   unimatrix [-b] [-c COLOR] [-h] [-l CHARACTER_LIST] [-n] [-o] [-s SPEED]
@@ -130,7 +134,7 @@ EXAMPLES
     $ unimatrix -n -l ens -s 50
 ```
 
-### License
+## License
 
 Unimatrix is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
