@@ -31,7 +31,7 @@ Blue with custom character set 'Linux' (```$ unimatrix -c blue -u 'Linux'```):
 ![screenshot2](/screenshot2.png?raw=true "Custom character set")
 
 
-Yellow with Alternate character set: Emoji (```$ unimatrix -c yellow -l 'e'```):
+Yellow with alternate character set: Emoji (```$ unimatrix -c yellow -l 'e'```):
 
 ![screenshot3](/screenshot3.png?raw=true "Alternate character set: Emoji")
 
