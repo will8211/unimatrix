@@ -75,8 +75,8 @@ CHARACTER SETS
   o   'Old' style non-unicode set, like cmatrix. Equal to 'AaSn'
   r   Lowercase Roman numerals ( mcclllxxxxvvvvviiiiii )
   R   Uppercase Roman numerals ( MCCLLLXXXXVVVVVIIIIII )
-  s   A subset of symbols actually used in the Matrix films ( -=\*\_+|:<>" )
-  S   All common keyboard symbols ( \`-=~!@#$%^&\*()\_+[]{}|;':",./<>?" )
+  s   A subset of symbols actually used in the Matrix films ( -=*_+|:<>" )
+  S   All common keyboard symbols ( `-=~!@#$%^&*()_+[]{}|\;':",./<>?" )
   u   Custom characters selected using -u switch
 
   For exmaple: '-l naAS' or '--character_list=naAS' will give something similar
@@ -117,6 +117,3 @@ EXAMPLES
 Unimatrix is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
 Unimatrix is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License at <http://www.gnu.org/licenses/> for more details.
-
-Created by William Mannard
-2017/01/19
