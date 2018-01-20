@@ -22,9 +22,19 @@ sudo chmod a+rx /usr/local/bin/unimatrix
 ### Screenshots
 
 ![screenshot1](/screenshot1.png?raw=true "Default")
+Default settings
+
 ![screenshot2](/screenshot2.png?raw=true "Custom character set")
+Blue with custom character set 'Linux'
+```unimatrix -c blue -u 'Linux'```
+
 ![screenshot3](/screenshot3.png?raw=true "Alternate character set: Emoji")
+Yellow with Alternate character set: Emoji 
+```unimatrix -c yellow -l 'e'```
+
 ![screenshot4](/screenshot4.png?raw=true "Emulating CMatrix")
+Emulating CMatrix
+```unimatrix -n -s 96 -l 'o'```
 
 ### Manual
 ```
