@@ -48,13 +48,17 @@ OPTIONAL ARGUMENTS
 
   -o                   Disable on-screen status
 
-  -s SPEED             Integer up to 100. 0 uses a one-second delay before 
-                       refreshing, 100 uses none. Use negative numbers for 
+  -s SPEED             Integer up to 100. 0 uses a one-second delay before
+                       refreshing, 100 uses none. Use negative numbers for
                        even lower speeds. Default=85
 
   -u CUSTOM_CHARACTERS Your own string of characters to display. Enclose in
                        single quotes ('') to escape special characters. For
                        example: -u '#$('.
+
+  -w                   Single-wave mode: Does a single burst of green rain,
+                       exits. You can put in a .bashrc file to run when your
+                       terminal launches. Works well with speed at 95.
 
 LONG ARGUMENTS
   -b --all-bold
@@ -65,6 +69,7 @@ LONG ARGUMENTS
   -n --no-bold
   -o --status-off
   -u --custom_characters=CUSTOM_CHARACTERS
+  -w --single_wave
 
 CHARACTER SETS
   When using '-l' or '--character_list=' option, follow it with one or more of
@@ -152,6 +157,9 @@ parser.add_argument('-u', '--custom-characters',
                     help='your own string of characters to display',
                     default='',
                     type=str)
+parser.add_argument('-w', '--single-wave',
+                    help='runs a single "wave" of green rain then exits',
+                    action='store_true')
 
 args = parser.parse_args()
 
@@ -236,6 +244,7 @@ class Canvas:
         self.columns = []
         for col in range(0, cols, 2):
             self.columns.append(Column(col, self.row_count))
+        self.nodes = []
 
 
 class Status:
@@ -276,25 +285,33 @@ class Status:
 
 class Column:
     """
-    Creates and stores a list of nodes (points that move down the screen).
-    Countdown timer determines time to spawn new node.
+    Creates nodes (points that move down the screen) that are then stored in
+    canvas.nodes. Countdown timer determines time to spawn new node.
     """
 
     def __init__(self, x_coord, row_count):
-        self.drawing = False
+        self.drawing = None #None means not yet. Later will be True or False
         self.x_coord = x_coord
         self.timer = randint(1, row_count)
-        self.nodes = []
+        if args.single_wave:
+            #Speeds it up a bit
+            self.timer = int(0.6 * self.timer)
 
     def spawn_node(self, canvas):
         """
         Creates nodes: points that move down the screen either writing or
         erasing characters as they go down
         """
+        if args.single_wave and self.drawing == False:
+            return
+
         self.drawing = not self.drawing
 
         if self.drawing:
             self.timer = randint(3, canvas.row_count-3)
+            if args.single_wave:
+                #A bit faster for single wave mode
+                self.timer = int(0.8 * self.timer)
         else:
             self.timer = randint(1, canvas.row_count)
 
@@ -306,7 +323,7 @@ class Column:
             if randint(0, 2) == 0:
                 white = True
 
-        self.nodes.append(Node(x, n_type, white))
+        canvas.nodes.append(Node(x, n_type, white))
 
 
 class Node:
@@ -512,6 +529,8 @@ def main(screen):
     writer = Writer(screen)
     stat = Status(screen)
     key = Key_hander(screen, stat)
+    if args.single_wave:
+        wave_delay = 10 #prevent single_wave mode from shutting down too early
 
     #Keep restarting however many times the screen resizes
     while True:
@@ -527,25 +546,30 @@ def main(screen):
                     col.spawn_node(canvas)
                 col.timer -= 1
 
-                for node in col.nodes:
-                    writer.draw(node)
+            for node in canvas.nodes:
+                writer.draw(node)
 
-                    #Move node down
-                    node.y_coord += 1
+                #Move node down
+                node.y_coord += 1
 
-                    #Mark old nodes for deletion
-                    if node.y_coord >= canvas.row_count:
-                        if node.white:
-                            #Stop white nodes from staying 'stuck' on last row.
-                            #Creates a special green node with a last_char
-                            #attribute to overwrite last white node.
-                            node.white = False
-                            node.y_coord -= 1
-                        else:
-                            node.expired = True
+                #Mark old nodes for deletion
+                if node.y_coord >= canvas.row_count:
+                    if node.white:
+                        #Stop white nodes from staying 'stuck' on last row.
+                        #Creates a special green node with a last_char
+                        #attribute to overwrite last white node.
+                        node.white = False
+                        node.y_coord -= 1
+                    else:
+                        node.expired = True
 
-                #Rewrite nodes list without expired nodes
-                col.nodes = [node for node in col.nodes if not node.expired]
+            #Rewrite nodes list without expired nodes
+            canvas.nodes = [node for node in canvas.nodes if not node.expired]
+
+            if args.single_wave:
+                if len(canvas.nodes) == 0 and wave_delay < 0:
+                    exit()
+                wave_delay -= 1
 
             #End of loop, refresh screen
             if stat.countdown > 0:
