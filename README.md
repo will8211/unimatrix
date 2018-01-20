@@ -8,7 +8,7 @@ should produce virtually the same output as CMatrix:
 ```
 $ unimatrix -n -s 96 -l o
 ```
-# INSTALLATION
+## INSTALLATION
 
 You can use curl to install:
 ```
@@ -21,7 +21,7 @@ sudo wget https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.
 sudo chmod a+rx /usr/local/bin/unimatrix
 ```
 
-# USAGE
+## USAGE
 ```
   unimatrix [-b] [-c COLOR] [-h] [-l CHARACTER_LIST] [-n] [-o] [-s SPEED]
             [-u CUSTOM_CHARACTERS]
@@ -114,7 +114,7 @@ sudo chmod a+rx /usr/local/bin/unimatrix
     $ unimatrix -n -l ens -s 50
 ```
 
-# LICENSE
+## LICENSE
 
 Unimatrix is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
