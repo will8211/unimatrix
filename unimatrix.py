@@ -232,7 +232,7 @@ start_color = colors_str[args.color]
 start_bg = colors_str[args.bg_color]
 
 speed = args.speed
-start_delay = (100-speed)*10
+start_delay = (101-speed)
 
 runtime = None
 
