@@ -176,7 +176,7 @@ parser.add_argument('-o', '--status-off',
                     help='Disable on-screen status')
 parser.add_argument('-s', '--speed',
                     help='speed, integer up to 100. Default=85',
-                    default=85,
+                    default=50,
                     type=int)
 parser.add_argument('-t', '--time',
                     help='time. See details below',
