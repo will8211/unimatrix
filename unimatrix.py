@@ -54,9 +54,9 @@ OPTIONAL ARGUMENTS
 
   -o                   Disable on-screen status
 
-  -s SPEED             Integer up to 100. 0 uses a one-second delay before
+  -s SPEED             Integer up to 100. 0 uses a 100 millisecond delay before
                        refreshing, 100 uses none. Use negative numbers for
-                       even lower speeds. Default=85
+                       even lower speeds. Default=50
 
   -t TIME              Exit the process after TIME seconds
 
@@ -232,7 +232,7 @@ start_color = colors_str[args.color]
 start_bg = colors_str[args.bg_color]
 
 speed = args.speed
-start_delay = (101-speed)
+start_delay = (100-speed)
 
 runtime = None
 
