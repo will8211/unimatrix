@@ -102,7 +102,7 @@ CHARACTER SETS
   '-l ACG' will use all the upper-case character sets. Use the same
   letter multiple times to increase the frequency of the character set. For
   example, the default setting is equal to '-l knnssss'.
-  
+
   * Klingon characters should work with ConScript-compliant fonts
 
 KEYBOARD CONTROL
@@ -390,6 +390,10 @@ class Key_handler:
             args.all_bold = True
             self.stat.update('Bold: all', self.delay)
 
+    def set_color(color_name):
+        curses.init_pair(1, colors_str[color_name.lower()], -1)
+        self.stat.update(color_name, self.delay)
+        
     def get(self):
         """
         Handles key presses. Returns True if a key was found, False otherwise.
@@ -400,47 +404,40 @@ class Key_handler:
         except:
             kp = None
             return False
-        if kp == ord(" ") or kp == ord("q") or kp == 27: #27 = ESC
+        chr_kp = chr(kp).lower()
+        if chr_kp in 'q ' or kp == 27:  # 27 = ESC
             exit()
-        elif kp == ord('-') or kp == ord('_') or kp == curses.KEY_LEFT:
+        elif chr_kp in '-_' or kp == curses.KEY_LEFT:
             self.delay = min(self.delay+10, 1000)
             self.show_speed()
-        elif kp == ord('=') or kp == ord('+') or kp == curses.KEY_RIGHT:
+        elif chr_kp in '=+' or kp == curses.KEY_RIGHT:
             self.delay = max(self.delay-10, 0)
             self.show_speed()
-        elif kp == ord('[')  or kp == curses.KEY_DOWN:
+        elif chr_kp == '[' or kp == curses.KEY_DOWN:
             self.delay = min(self.delay+100, 1000)
             self.show_speed()
-        elif kp == ord(']')  or kp == curses.KEY_UP:
+        elif chr_kp == ']' or kp == curses.KEY_UP:
             self.delay = max(self.delay-100, 0)
             self.show_speed()
-        elif kp == ord('b'):
+        elif chr_kp == 'b':
             self.cycle_bold()
-        elif kp == ord('1'):
-            curses.init_pair(1, curses.COLOR_GREEN, -1)
-            self.stat.update('Green', self.delay)
-        elif kp == ord('2'):
-            curses.init_pair(1, curses.COLOR_RED, -1)
-            self.stat.update('Red', self.delay)
-        elif kp == ord('3'):
-            curses.init_pair(1, curses.COLOR_BLUE, -1)
-            self.stat.update('Blue', self.delay)
-        elif kp == ord('4'):
-            curses.init_pair(1, curses.COLOR_WHITE, -1)
-            self.stat.update('White', self.delay)
-        elif kp == ord('5'):
-            curses.init_pair(1, curses.COLOR_YELLOW, -1)
-            self.stat.update('Yellow', self.delay)
-        elif kp == ord('6'):
-            curses.init_pair(1, curses.COLOR_CYAN, -1)
-            self.stat.update('Cyan', self.delay)
-        elif kp == ord('7'):
-            curses.init_pair(1, curses.COLOR_MAGENTA, -1)
-            self.stat.update('Magenta', self.delay)
-        elif kp == ord('8'):
-            curses.init_pair(1, curses.COLOR_BLACK, -1)
-            self.stat.update('Black', self.delay)
-        elif kp == ord('o'):
+        elif chr_kp == '1':
+            self.set_color('Green')
+        elif chr_kp == '2':
+            self.set_color('Red')
+        elif chr_kp == '3':
+            self.set_color('Blue')
+        elif chr_kp == '4':
+            self.set_color('White')
+        elif chr_kp == '5':
+            self.set_color('Yellow')
+        elif chr_kp == '6':
+            self.set_color('Cyan')
+        elif chr_kp == '7':
+            self.set_color('Magenta')
+        elif chr_kp == '8':
+            self.set_color('Black')
+        elif chr_kp == 'o':
             self.toggle_status()
         else:
             key_pressed = False
