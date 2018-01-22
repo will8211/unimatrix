@@ -87,7 +87,7 @@ CHARACTER SETS
   g   Lowercase Greek alphabet
   G   Uppercase Greek alphabet
   k   Japanese katakana (half-width)
-  K   Klingon "pIqaD" alphabet (Requires supporting font)
+  K   Klingon "pIqaD" alphabet (Requires supporting font) *
   m   Default 'Matrix' set, equal to 'knnssss'
   n   Numbers 0-9
   o   'Old' style non-unicode set, like cmatrix. Equal to 'AaSn'
@@ -102,6 +102,8 @@ CHARACTER SETS
   '-l ACG' will use all the upper-case character sets. Use the same
   letter multiple times to increase the frequency of the character set. For
   example, the default setting is equal to '-l knnssss'.
+  
+  * Klingon characters work with "FreeMono Regular" font
 
 KEYBOARD CONTROL
   SPACE, CTRL-c or q   exit
