@@ -541,7 +541,7 @@ class Writer:
 
 ### Main loop
 
-def main(screen):
+def _main(screen):
     writer = Writer(screen)
     stat = Status(screen)
     key = Key_handler(screen, stat)
@@ -608,9 +608,12 @@ def main(screen):
             curses.napms(key.delay)
 
 
-### Wrapper to allow CTRL-C to exit smoothly
+def main():
+    # Wrapper to allow CTRL-C to exit smoothly
+    try:
+        curses.wrapper(_main)
+    except KeyboardInterrupt:
+        pass
 
-try:
-    curses.wrapper(main)
-except KeyboardInterrupt:
-    pass
+if __name__ == '__main__':
+    main()

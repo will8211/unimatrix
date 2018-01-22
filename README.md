@@ -18,6 +18,10 @@ If you do not have curl, you can alternatively use a recent wget:
 sudo wget https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -O /usr/local/bin/unimatrix
 sudo chmod a+rx /usr/local/bin/unimatrix
 ```
+You can also install it with pip:
+```
+pip install git+https://github.com/will8211/unimatrix.git
+```
 
 ## Screenshots
 
