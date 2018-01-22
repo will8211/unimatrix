@@ -42,6 +42,9 @@ OPTIONAL ARGUMENTS
   -c COLOR             One of: green (default), red, blue, white, yellow, cyan,
                        magenta, black
 
+  -g COLOR             Background color (See -c). Defaults to keeping
+                       terminal's current background.
+
   -h                   Show this help message and exit
 
   -l CHARACTER_LIST    Select character set(s) using a string over letter
@@ -69,6 +72,7 @@ LONG ARGUMENTS
   -a --asychronous
   -b --all-bold
   -c --color=COLOR
+  -g --bg-color=COLOR
   -h --help
   -l --character-list=CHARACTER_LIST
   -s --speed=SPEED
@@ -114,10 +118,14 @@ KEYBOARD CONTROL
   + or RIGHT           increase speed by 1
   [ or DOWN            decrease speed by 10
   ] or UP              increase speed by 10
+  a                    toggle asynchronous scrolling
   b                    cycle through bold character options
                            (bold off-->bold on-->all bold)
-  1 to 8               set color: (1) Green   (2) Red     (3) Blue    (4) White
-                                  (5) Yellow  (6) Cyan    (7) Magenta (8) Black
+  1 to 9               set color: (1) Green   (2) Red   (3) Blue     (4) White
+                                  (5) Yellow  (6) Cyan  (7) Magenta  (8) Black
+                                  (9) Terminal default
+  ! to )               set background color (same colors as above, but pressing
+                           shift + number)
   o                    toggle on-screen status
 
 EXAMPLES
@@ -149,6 +157,10 @@ parser.add_argument('-c', '--color',
                     default='green',
                     help='one of: green (default), red, blue, white, yellow, \
                           cyan, magenta, black',
+                    type=str)
+parser.add_argument('-g', '--bg-color',
+                    default='default',
+                    help='background color (see -c)',
                     type=str)
 parser.add_argument('-h', '--help',
                     help='display extented usage information and exit.',
@@ -213,9 +225,12 @@ colors_str = {
     'yellow': curses.COLOR_YELLOW,
     'cyan': curses.COLOR_CYAN,
     'magenta': curses.COLOR_MAGENTA,
-    'black': curses.COLOR_BLACK}
+    'black': curses.COLOR_BLACK,
+    'default': -1}
 
 start_color = colors_str[args.color]
+start_bg = colors_str[args.bg_color]
+
 speed = args.speed
 start_delay = (100-speed)*10
 
@@ -267,6 +282,13 @@ class Canvas:
         for col in range(0, cols, 2):
             self.columns.append(Column(col, self.row_count))
         self.nodes = []
+
+        #Draw a background
+        for x in range(self.row_count):
+            try:
+                screen.addstr(x, 0, ' '*self.col_count, curses.color_pair(1))
+            except curses.error:
+                pass
 
 
 class Status:
@@ -386,6 +408,9 @@ class Key_handler:
         self.stat = stat
         self.screen.nodelay(True)
         self.delay = start_delay
+        self.fg = start_color
+        self.bg = start_bg
+
 
     def cycle_bold(self):
         """
@@ -435,36 +460,63 @@ class Key_handler:
             self.stat.update('Async: %s' % on_off, self.delay)
         elif kp == ord('b'):
             self.cycle_bold()
+
         elif kp == ord('1'):
-            curses.init_pair(1, curses.COLOR_GREEN, -1)
-            self.stat.update('Green', self.delay)
+            self.set_fg_color('Green')
         elif kp == ord('2'):
-            curses.init_pair(1, curses.COLOR_RED, -1)
-            self.stat.update('Red', self.delay)
+            self.set_fg_color('Red')
         elif kp == ord('3'):
-            curses.init_pair(1, curses.COLOR_BLUE, -1)
-            self.stat.update('Blue', self.delay)
+            self.set_fg_color('Blue')
         elif kp == ord('4'):
-            curses.init_pair(1, curses.COLOR_WHITE, -1)
-            self.stat.update('White', self.delay)
+            self.set_fg_color('White')
         elif kp == ord('5'):
-            curses.init_pair(1, curses.COLOR_YELLOW, -1)
-            self.stat.update('Yellow', self.delay)
+            self.set_fg_color('Yellow')
         elif kp == ord('6'):
-            curses.init_pair(1, curses.COLOR_CYAN, -1)
-            self.stat.update('Cyan', self.delay)
+            self.set_fg_color('Cyan')
         elif kp == ord('7'):
-            curses.init_pair(1, curses.COLOR_MAGENTA, -1)
-            self.stat.update('Magenta', self.delay)
+            self.set_fg_color('Magenta')
         elif kp == ord('8'):
-            curses.init_pair(1, curses.COLOR_BLACK, -1)
-            self.stat.update('Black', self.delay)
+            self.set_fg_color('Black')
+        elif kp == ord('9'):
+            self.set_fg_color('default')
+
+        elif kp == ord('!'):
+            self.set_bg_color('Green')
+        elif kp == ord('@'):
+            self.set_bg_color('Red')
+        elif kp == ord('#'):
+            self.set_bg_color('Blue')
+        elif kp == ord('$'):
+            self.set_bg_color('White')
+        elif kp == ord('%'):
+            self.set_bg_color('Yellow')
+        elif kp == ord('^'):
+            self.set_bg_color('Cyan')
+        elif kp == ord('&'):
+            self.set_bg_color('Magenta')
+        elif kp == ord('*'):
+            self.set_bg_color('Black')
+        elif kp == ord('('):
+            self.set_bg_color('default')
         elif kp == ord('o'):
             self.toggle_status()
+
         else:
             key_pressed = False
-
         return key_pressed
+
+    def set_fg_color(self, name):
+        self.fg = colors_str[name.lower()]
+        curses.init_pair(1, self.fg, self.bg)
+        if name == 'default':
+            name = "Def't color"
+        self.stat.update(name, self.delay)
+
+    def set_bg_color(self, name):
+        self.bg = colors_str[name.lower()]
+        curses.init_pair(1, self.fg, self.bg)
+        curses.init_pair(2, curses.COLOR_WHITE, self.bg)
+        self.stat.update('BG: %s' % name, self.delay)
 
     def show_speed(self):
         """
@@ -492,10 +544,9 @@ class Writer:
         self.screen.scrollok(0)
         curses.curs_set(0)
         curses.use_default_colors()
-        curses.init_pair(1, start_color, -1)
-        curses.init_pair(2, curses.COLOR_WHITE, -1)
+        curses.init_pair(1, start_color, start_bg)
+        curses.init_pair(2, curses.COLOR_WHITE, start_bg)
         curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
-        self.fg_color = curses.color_pair(1)
         self.white = curses.color_pair(2)
 
     def get_char(self):
@@ -527,8 +578,8 @@ class Writer:
         y = node.y_coord
         x = node.x_coord
         character = ' '
-        color = self.fg_color
         attr = self.get_attr(node)
+        color = curses.color_pair(1)
         if node.n_type == 'writer':
             if not node.white and node.last_char:
                 #Special green character for overwriting last white one
@@ -537,7 +588,7 @@ class Writer:
             else:
                 character = self.get_char()
             if node.white:
-                color = self.white
+                color = curses.color_pair(2)
 
         try:
             #Draw the character
@@ -548,7 +599,7 @@ class Writer:
                     #to overwrite last white character
                     attr = self.get_attr(node, above=True)
                     self.screen.addstr(y-1, x, node.last_char,
-                                      self.fg_color|attr)
+                                      curses.color_pair(1)|attr)
                 node.last_char = character
         except curses.error:
             # Override scrolling error character are pushed off the screen.
