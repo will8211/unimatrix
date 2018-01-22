@@ -87,7 +87,7 @@ CHARACTER SETS
   g   Lowercase Greek alphabet
   G   Uppercase Greek alphabet
   k   Japanese katakana (half-width)
-  K   Klingon "pIqaD" alphabet (Requires supporting font)
+  K   Klingon "pIqaD" alphabet (Requires supporting font) *
   m   Default 'Matrix' set, equal to 'knnssss'
   n   Numbers 0-9
   o   'Old' style non-unicode set, like cmatrix. Equal to 'AaSn'
@@ -102,6 +102,8 @@ CHARACTER SETS
   '-l ACG' will use all the upper-case character sets. Use the same
   letter multiple times to increase the frequency of the character set. For
   example, the default setting is equal to '-l knnssss'.
+
+  * Klingon characters should work with ConScript-compliant fonts
 
 KEYBOARD CONTROL
   SPACE, CTRL-c or q   exit
@@ -359,7 +361,7 @@ class Node:
         self.expired = False
 
 
-class Key_hander:
+class Key_handler:
     """
     Handles keyboard input.
     """
@@ -455,12 +457,6 @@ class Key_hander:
         args.status_off = not args.status_off
         on_off = 'off' if args.status_off else 'on'
         self.stat.update('Status: %s' % on_off, self.delay)
-        if args.status_off:
-            args.status_off = False
-            self.stat.update('Status: on', self.delay)
-        else:
-            self.stat.update('Status: off', self.delay)
-            args.status_off = True
 
 
 class Writer:
@@ -542,7 +538,7 @@ class Writer:
 def main(screen):
     writer = Writer(screen)
     stat = Status(screen)
-    key = Key_hander(screen, stat)
+    key = Key_handler(screen, stat)
     if args.single_wave:
         wave_delay = 10 #prevent single_wave mode from shutting down too early
 
