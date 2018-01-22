@@ -103,7 +103,7 @@ CHARACTER SETS
   letter multiple times to increase the frequency of the character set. For
   example, the default setting is equal to '-l knnssss'.
   
-  * Klingon characters should work with conscript-compliant fonts
+  * Klingon characters should work with ConScript-compliant fonts
 
 KEYBOARD CONTROL
   SPACE, CTRL-c or q   exit
