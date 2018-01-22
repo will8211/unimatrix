@@ -457,12 +457,9 @@ class Key_handler:
         """
         On 'o' keypress, turn status display on or off
         """
-        if args.status_off:
-            args.status_off = False
-            self.stat.update('Status: on', self.delay)
-        else:
-            self.stat.update('Status: off', self.delay)
-            args.status_off = True
+        args.status_off = not args.status_off
+        on_off = 'off' if args.status_off else 'on'
+        self.stat.update('Status: %s' % on_off, self.delay)
 
 
 class Writer:
