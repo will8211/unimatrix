@@ -87,6 +87,7 @@ CHARACTER SETS
   g   Lowercase Greek alphabet
   G   Uppercase Greek alphabet
   k   Japanese katakana (half-width)
+  K   Klingon "pIqaD" alphabet (Requires supporting font)
   m   Default 'Matrix' set, equal to 'knnssss'
   n   Numbers 0-9
   o   'Old' style non-unicode set, like cmatrix. Equal to 'AaSn'
@@ -184,6 +185,7 @@ char_set = {
     'g': 'αβγδεζηθικλμνξοπρστυφχψως',
     'G': 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ',
     'k': 'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ',
+    'K': '',
     'm': 'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890'
           + '1234567890-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"',
     'n': '1234567890',
