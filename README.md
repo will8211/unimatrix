@@ -48,10 +48,12 @@ Emulating CMatrix (```unimatrix -n -s 96 -l 'o'```):
 ## Manual
 ```
 USAGE
-  unimatrix [-b] [-c COLOR] [-h] [-l CHARACTER_LIST] [-n] [-o] [-s SPEED]
-            [-u CUSTOM_CHARACTERS] [-w]
+  unimatrix [-a] [-b] [-c COLOR] [-h] [-l CHARACTER_LIST] [-n] [-o] [-s SPEED]
+            [-u CUSTOM_CHARACTERS]
 
 OPTIONAL ARGUMENTS
+  -a                   Asynchronous scroll. Lines will move at varied speeds.
+
   -b                   Use only bold characters
 
   -c COLOR             One of: green (default), red, blue, white, yellow, cyan,
@@ -81,6 +83,7 @@ OPTIONAL ARGUMENTS
                        terminal launches. Works well with speed at 95.
 
 LONG ARGUMENTS
+  -a --asychronous
   -b --all-bold
   -c --color=COLOR
   -h --help
@@ -111,7 +114,7 @@ CHARACTER SETS
   r   Lowercase Roman numerals ( mcclllxxxxvvvvviiiiii )
   R   Uppercase Roman numerals ( MCCLLLXXXXVVVVVIIIIII )
   s   A subset of symbols actually used in the Matrix films ( -=*_+|:<>" )
-  S   All common keyboard symbols ( `-=~!@#$%^&*()_+[]{}|\;':",./<>?" )
+  S   All common keyboard symbols ( `-=~!z#$%^&*()_+[]{}|\;':",./<>?" )
   u   Custom characters selected using -u switch
 
   For exmaple: '-l naAS' or '--character_list=naAS' will give something similar
@@ -120,7 +123,7 @@ CHARACTER SETS
   letter multiple times to increase the frequency of the character set. For
   example, the default setting is equal to '-l knnssss'.
 
-    * Klingon characters should work with ConScript-compliant fonts
+  * Klingon characters should work with ConScript-compliant fonts
 
 KEYBOARD CONTROL
   SPACE, CTRL-c or q   exit
@@ -128,10 +131,11 @@ KEYBOARD CONTROL
   + or RIGHT           increase speed by 1
   [ or DOWN            decrease speed by 10
   ] or UP              increase speed by 10
+  a                    toggle asynchronous scrolling
   b                    cycle through bold character options
-                           (bold off-->bold on-->all bold)
+                             (bold off-->bold on-->all bold)
   1 to 8               set color: (1) Green   (2) Red     (3) Blue    (4) White
-                                  (5) Yellow  (6) Cyan    (7) Magenta (8) Black
+                                    (5) Yellow  (6) Cyan    (7) Magenta (8) Black
   o                    toggle on-screen status
 
 EXAMPLES

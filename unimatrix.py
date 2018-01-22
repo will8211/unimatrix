@@ -31,10 +31,12 @@ from random import randint, choice
 
 help_msg = '''
 USAGE
-  unimatrix [-b] [-c COLOR] [-h] [-l CHARACTER_LIST] [-n] [-o] [-s SPEED]
+  unimatrix [-a] [-b] [-c COLOR] [-h] [-l CHARACTER_LIST] [-n] [-o] [-s SPEED]
             [-u CUSTOM_CHARACTERS]
 
 OPTIONAL ARGUMENTS
+  -a                   Asynchronous scroll. Lines will move at varied speeds.
+
   -b                   Use only bold characters
 
   -c COLOR             One of: green (default), red, blue, white, yellow, cyan,
@@ -64,6 +66,7 @@ OPTIONAL ARGUMENTS
                        terminal launches. Works well with speed at 95.
 
 LONG ARGUMENTS
+  -a --asychronous
   -b --all-bold
   -c --color=COLOR
   -h --help
@@ -102,7 +105,7 @@ CHARACTER SETS
   '-l ACG' will use all the upper-case character sets. Use the same
   letter multiple times to increase the frequency of the character set. For
   example, the default setting is equal to '-l knnssss'.
-  
+
   * Klingon characters should work with ConScript-compliant fonts
 
 KEYBOARD CONTROL
@@ -136,6 +139,9 @@ EXAMPLES
 
 parser = argparse.ArgumentParser(add_help=False)
 
+parser.add_argument('-a', '--asynchronous',
+                    action='store_true',
+                    help='use asynchronous scrolling')
 parser.add_argument('-b', '--all-bold',
                     action='store_true',
                     help='use all bold characters')
@@ -309,6 +315,7 @@ class Column:
         self.drawing = None #None means not yet. Later will be True or False
         self.x_coord = x_coord
         self.timer = randint(1, row_count)
+        self.async_speed = randint(1, 3)
         if args.single_wave:
             #Speeds it up a bit
             self.timer = int(0.6 * self.timer)
@@ -323,23 +330,31 @@ class Column:
 
         self.drawing = not self.drawing
 
+        # Multiplier for spawning slow asynchronous nodes more slowly
+        # in order to maintain their length
+        if args.asynchronous:
+            m = self.async_speed
+        else:
+            m = 1
+
         if self.drawing:
-            self.timer = randint(3, canvas.row_count-3)
+            self.timer = randint(3*m, (canvas.row_count-3)*m)
             if args.single_wave:
                 #A bit faster for single wave mode
                 self.timer = int(0.8 * self.timer)
         else:
-            self.timer = randint(1, canvas.row_count)
+            self.timer = randint(1*m, canvas.row_count*m)
 
         x = self.x_coord
         n_type = 'eraser'
+        async_speed = self.async_speed
         white = False
         if self.drawing:
             n_type = 'writer'
             if randint(0, 2) == 0:
                 white = True
 
-        canvas.nodes.append(Node(x, n_type, white))
+        canvas.nodes.append(Node(x, n_type, async_speed, white))
 
 
 class Node:
@@ -352,14 +367,14 @@ class Node:
     expired   -> Bool. If True, node is marked for deletion
     """
 
-    def __init__(self, x_coord, n_type, white=False):
+    def __init__(self, x_coord, n_type, async_speed, white=False):
         self.x_coord = x_coord
         self.y_coord = 0
         self.n_type = n_type
         self.white = white
         self.last_char = None
         self.expired = False
-
+        self.async_speed = async_speed
 
 class Key_handler:
     """
@@ -414,6 +429,10 @@ class Key_handler:
         elif kp == ord(']')  or kp == curses.KEY_UP:
             self.delay = max(self.delay-100, 0)
             self.show_speed()
+        elif kp == ord('a'):
+            args.asynchronous = not args.asynchronous
+            on_off = 'off' if args.status_off else 'on'
+            self.stat.update('Async: %s' % on_off, self.delay)
         elif kp == ord('b'):
             self.cycle_bold()
         elif kp == ord('1'):
@@ -550,6 +569,8 @@ def _main(screen):
     #Keep restarting however many times the screen resizes
     while True:
         canvas = Canvas(screen)
+        #Set a rhyth form asychronous movement
+        async_clock = 5
         #Loop to draw the green rain
         while canvas.size_changed == False:
             if runtime and time.time() - starttime > runtime:
@@ -564,10 +585,16 @@ def _main(screen):
                 col.timer -= 1
 
             for node in canvas.nodes:
-                writer.draw(node)
 
                 #Move node down
-                node.y_coord += 1
+                if args.asynchronous:
+                    if async_clock % node.async_speed == 0:
+                        writer.draw(node)
+                        node.y_coord += 1
+                else:
+                    writer.draw(node)
+                    node.y_coord += 1
+
 
                 #Mark old nodes for deletion
                 if node.y_coord >= canvas.row_count:
@@ -604,6 +631,11 @@ def _main(screen):
             #Add delay before next loop
             curses.napms(key.delay)
 
+            #update async clock
+            if async_clock:
+                async_clock -= 1
+            else:
+                async_clock = 5
 
 def main():
     # Wrapper to allow CTRL-C to exit smoothly
