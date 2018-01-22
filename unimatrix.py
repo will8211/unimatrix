@@ -361,7 +361,7 @@ class Node:
         self.expired = False
 
 
-class Key_hander:
+class Key_handler:
     """
     Handles keyboard input.
     """
@@ -544,7 +544,7 @@ class Writer:
 def main(screen):
     writer = Writer(screen)
     stat = Status(screen)
-    key = Key_hander(screen, stat)
+    key = Key_handler(screen, stat)
     if args.single_wave:
         wave_delay = 10 #prevent single_wave mode from shutting down too early
 
