@@ -356,7 +356,7 @@ class Column:
         Creates nodes: points that move down the screen either writing or
         erasing characters as they go down
         """
-        if args.single_wave and not self.drawing:
+        if args.single_wave and self.drawing is False:
             return
 
         self.drawing = not self.drawing
