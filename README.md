@@ -48,8 +48,8 @@ Emulating CMatrix (```unimatrix -n -s 96 -l 'o'```):
 ## Manual
 ```
 USAGE
-  unimatrix [-a] [-b] [-c COLOR] [-h] [-l CHARACTER_LIST] [-n] [-o] [-s SPEED]
-            [-u CUSTOM_CHARACTERS]
+  unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-l CHARACTER_LIST] [-n]
+            [-o] [-s SPEED] [-u CUSTOM_CHARACTERS]
 
 OPTIONAL ARGUMENTS
   -a                   Asynchronous scroll. Lines will move at varied speeds.
@@ -58,6 +58,8 @@ OPTIONAL ARGUMENTS
 
   -c COLOR             One of: green (default), red, blue, white, yellow, cyan,
                        magenta, black
+
+  -f                   Enable "flashers," characters that continously change.
 
   -g COLOR             Background color (See -c). Defaults to keeping
                        terminal's current background.
@@ -89,6 +91,7 @@ LONG ARGUMENTS
   -a --asychronous
   -b --all-bold
   -c --color=COLOR
+  -f --flashers
   -g --bg-color=COLOR
   -h --help
   -l --character-list=CHARACTER_LIST
@@ -138,12 +141,13 @@ KEYBOARD CONTROL
   a                    toggle asynchronous scrolling
   b                    cycle through bold character options
                            (bold off-->bold on-->all bold)
+  f                    toggle flashing characters
+  o                    toggle on-screen status
   1 to 9               set color: (1) Green   (2) Red   (3) Blue     (4) White
                                   (5) Yellow  (6) Cyan  (7) Magenta  (8) Black
                                   (9) Terminal default
   ! to )               set background color (same colors as above, but pressing
                            shift + number)
-  o                    toggle on-screen status
 
 EXAMPLES
   Mimic default output of cmatrix (no unicode characters, works in TTY):
