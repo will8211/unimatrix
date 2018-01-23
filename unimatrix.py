@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# coding=utf-8
 #
 # unimatrix.py
 # <https://github.com/will8211/unimatrix>
@@ -24,10 +25,10 @@
 # Created by William Mannard
 # 2018/01/19
 
-import curses
 import argparse
+import curses
 import time
-from random import randint, choice
+from random import choice, randint
 
 help_msg = '''
 USAGE
@@ -42,7 +43,7 @@ OPTIONAL ARGUMENTS
   -c COLOR             One of: green (default), red, blue, white, yellow, cyan,
                        magenta, black
 
-  -f                   Enable "flashers," characters that continously change.
+  -f                   Enable "flashers," characters that continuously change.
 
   -g COLOR             Background color (See -c). Defaults to keeping
                        terminal's current background.
@@ -71,7 +72,7 @@ OPTIONAL ARGUMENTS
                        terminal launches. Works well with speed at 95.
 
 LONG ARGUMENTS
-  -a --asychronous
+  -a --asynchronous
   -b --all-bold
   -c --color=COLOR
   -f --flashers
@@ -107,7 +108,7 @@ CHARACTER SETS
   S   All common keyboard symbols ( `-=~!z#$%^&*()_+[]{}|\;':",./<>?" )
   u   Custom characters selected using -u switch
 
-  For exmaple: '-l naAS' or '--character_list=naAS' will give something similar
+  For example: '-l naAS' or '--character_list=naAS' will give something similar
   to the output of the original cmatrix program in its default mode.
   '-l ACG' will use all the upper-case character sets. Use the same
   letter multiple times to increase the frequency of the character set. For
@@ -164,13 +165,13 @@ parser.add_argument('-c', '--color',
                     type=str)
 parser.add_argument('-f', '--flashers',
                     action='store_true',
-                    help='some characters will continously change in place')
+                    help='some characters will continuously change in place')
 parser.add_argument('-g', '--bg-color',
                     default='default',
                     help='background color (see -c)',
                     type=str)
 parser.add_argument('-h', '--help',
-                    help='display extented usage information and exit.',
+                    help='display extended usage information and exit.',
                     action='store_true')
 parser.add_argument('-l', '--character-list',
                     help='character set. See details below',
@@ -214,10 +215,10 @@ char_set = {
     'k': 'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ',
     'K': '',
     'm': 'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890'
-          + '1234567890-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"',
+         '1234567890-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"',
     'n': '1234567890',
     'o': 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890'
-             + '`-=~!@#$%^&*()_+[]{}|\;\':",./<>?"',
+         '`-=~!@#$%^&*()_+[]{}|\;\':",./<>?"',
     'r': 'mcclllxxxxvvvvviiiiii',
     'R': 'MCCLLLXXXXVVVVVIIIIII',
     's': '-=*_+|:<>"',
@@ -239,7 +240,7 @@ start_color = colors_str[args.color]
 start_bg = colors_str[args.bg_color]
 
 speed = args.speed
-start_delay = (100-speed)*10
+start_delay = (100 - speed) * 10
 
 runtime = None
 
@@ -268,7 +269,7 @@ else:
 if args.no_bold:
     args.all_bold = False
 
-chars_len = len(chars)-1
+chars_len = len(chars) - 1
 
 
 ### Classes
@@ -291,10 +292,10 @@ class Canvas:
         self.nodes = []
         self.flashers = set()
 
-        #Draw a background
+        # Draw a background
         for x in range(self.row_count):
             try:
-                screen.addstr(x, 0, ' '*self.col_count, curses.color_pair(1))
+                screen.addstr(x, 0, ' ' * self.col_count, curses.color_pair(1))
             except curses.error:
                 pass
 
@@ -319,7 +320,7 @@ class Status:
             self.screen.addstr(0, 0, message_str, curses.color_pair(3))
             self.last_message = message_str
             # More frames for faster speeds:
-            self.countdown = (100//(delay//10 + 1)) + 2
+            self.countdown = (100 // (delay // 10 + 1)) + 2
 
     def refresh(self):
         """
@@ -332,7 +333,7 @@ class Status:
         """
         Erases message with spaces when the countdown runs out
         """
-        self.screen.addstr(0, 0, ' '*11, curses.color_pair(1))
+        self.screen.addstr(0, 0, ' ' * 11, curses.color_pair(1))
 
 
 class Column:
@@ -342,12 +343,12 @@ class Column:
     """
 
     def __init__(self, x_coord, row_count):
-        self.drawing = None #None means not yet. Later will be True or False
+        self.drawing = None  # None means not yet. Later will be True or False
         self.x_coord = x_coord
         self.timer = randint(1, row_count)
         self.async_speed = randint(1, 3)
         if args.single_wave:
-            #Speeds it up a bit
+            # Speeds it up a bit
             self.timer = int(0.6 * self.timer)
 
     def spawn_node(self, canvas):
@@ -355,7 +356,7 @@ class Column:
         Creates nodes: points that move down the screen either writing or
         erasing characters as they go down
         """
-        if args.single_wave and self.drawing == False:
+        if args.single_wave and not self.drawing:
             return
 
         self.drawing = not self.drawing
@@ -368,12 +369,12 @@ class Column:
             m = 1
 
         if self.drawing:
-            self.timer = randint(3*m, (canvas.row_count-3)*m)
+            self.timer = randint(3 * m, (canvas.row_count - 3) * m)
             if args.single_wave:
-                #A bit faster for single wave mode
+                # A bit faster for single wave mode
                 self.timer = int(0.8 * self.timer)
         else:
-            self.timer = randint(1*m, canvas.row_count*m)
+            self.timer = randint(1 * m, canvas.row_count * m)
 
         x = self.x_coord
         n_type = 'eraser'
@@ -406,7 +407,8 @@ class Node:
         self.expired = False
         self.async_speed = async_speed
 
-class Key_handler:
+
+class KeyHandler:
     """
     Handles keyboard input.
     """
@@ -418,7 +420,6 @@ class Key_handler:
         self.delay = start_delay
         self.fg = start_color
         self.bg = start_bg
-
 
     def cycle_bold(self):
         """
@@ -443,25 +444,22 @@ class Key_handler:
         Handles key presses. Returns True if a key was found, False otherwise.
         """
         key_pressed = True
-        try:
-            kp = self.screen.getch()
-        except:
-            kp = None
-            return False
-        if kp == ord(" ") or kp == ord("q") or kp == 27: #27 = ESC
+        kp = self.screen.getch()
+
+        if kp == ord(" ") or kp == ord("q") or kp == 27:  # 27 = ESC
             exit()
 
         elif kp == ord('-') or kp == ord('_') or kp == curses.KEY_LEFT:
-            self.delay = min(self.delay+10, 10990)
+            self.delay = min(self.delay + 10, 10990)
             self.show_speed()
         elif kp == ord('=') or kp == ord('+') or kp == curses.KEY_RIGHT:
-            self.delay = max(self.delay-10, 0)
+            self.delay = max(self.delay - 10, 0)
             self.show_speed()
-        elif kp == ord('[')  or kp == curses.KEY_DOWN:
-            self.delay = min(self.delay+100, 10990)
+        elif kp == ord('[') or kp == curses.KEY_DOWN:
+            self.delay = min(self.delay + 100, 10990)
             self.show_speed()
-        elif kp == ord(']')  or kp == curses.KEY_UP:
-            self.delay = max(self.delay-100, 0)
+        elif kp == ord(']') or kp == curses.KEY_UP:
+            self.delay = max(self.delay - 100, 0)
             self.show_speed()
 
         elif kp == ord('a'):
@@ -536,7 +534,7 @@ class Key_handler:
         """
         Display current speed (-999 to 100) when it is changed by keypress
         """
-        self.stat.update('Speed: %d' % (100 - self.delay//10), self.delay)
+        self.stat.update('Speed: %d' % (100 - self.delay // 10), self.delay)
 
     def toggle_status(self):
         """
@@ -550,7 +548,7 @@ class Key_handler:
 class Writer:
     """
     Initializes character writing options and contains methods for writing and
-    erasing charcters from the screen.
+    erasing characters from the screen.
     """
 
     def __init__(self, screen):
@@ -563,13 +561,15 @@ class Writer:
         curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
         self.white = curses.color_pair(2)
 
-    def get_char(self):
+    @staticmethod
+    def get_char():
         """
         Returns a random character from the active character set
         """
         return chars[randint(0, chars_len)]
 
-    def get_attr(self, node, above=False):
+    @staticmethod
+    def get_attr(node, above=False):
         """
         Returns either A_BOLD attribute or A_NORMAL based on Bold setting
         "above=True" means it an extra green character used to overwrite the
@@ -596,8 +596,8 @@ class Writer:
         color = curses.color_pair(1)
         if node.n_type == 'writer':
             if not node.white and node.last_char:
-                #Special green character for overwriting last white one
-                #at bottom of column that was not being overwritten.
+                # Special green character for overwriting last white one
+                # at bottom of column that was not being overwritten.
                 character = node.last_char
             else:
                 character = self.get_char()
@@ -605,15 +605,15 @@ class Writer:
                 color = curses.color_pair(2)
 
         try:
-            #Draw the character
-            self.screen.addstr(y, x, character, color|attr)
+            # Draw the character
+            self.screen.addstr(y, x, character, color | attr)
             if node.white:
                 if node.last_char:
-                    #If it's a white node, also write a green character above
-                    #to overwrite last white character
+                    # If it's a white node, also write a green character above
+                    # to overwrite last white character
                     attr = self.get_attr(node, above=True)
-                    self.screen.addstr(y-1, x, node.last_char,
-                                      curses.color_pair(1)|attr)
+                    self.screen.addstr(y - 1, x, node.last_char,
+                                       curses.color_pair(1) | attr)
                 node.last_char = character
         except curses.error:
             # Override scrolling error character are pushed off the screen.
@@ -628,34 +628,37 @@ class Writer:
         y = flasher[0]
         x = flasher[1]
         try:
-            self.screen.addstr(y, x, self.get_char(), color|attr)
+            self.screen.addstr(y, x, self.get_char(), color | attr)
         except curses.error:
             pass
+
 
 ### Main loop
 
 def _main(screen):
     writer = Writer(screen)
     stat = Status(screen)
-    key = Key_handler(screen, stat)
+    key = KeyHandler(screen, stat)
     if args.single_wave:
-        wave_delay = 10 #prevent single_wave mode from shutting down too early
+        wave_delay = 10  # prevent single_wave mode from shutting down too early
+    else:
+        wave_delay = 0
 
     starttime = time.time()
 
-    #Keep restarting however many times the screen resizes
+    # Keep restarting however many times the screen resizes
     while True:
         canvas = Canvas(screen)
-        #Set a rhyth form asychronous movement
+        # Set a rhythm for asynchronous movement
         async_clock = 5
-        #Loop to draw the green rain
-        while canvas.size_changed == False:
+        # Loop to draw the green rain
+        while not canvas.size_changed:
             if runtime and time.time() - starttime > runtime:
                 exit()
-            #Catch keypress
+            # Catch keypress
             if key.get():
                 continue
-            #Spawn new nodes
+            # Spawn new nodes
             for col in canvas.columns:
                 if col.timer == 0:
                     col.spawn_node(canvas)
@@ -680,12 +683,12 @@ def _main(screen):
                     writer.draw(node)
                     node.y_coord += 1
 
-                #Mark old nodes for deletion
+                # Mark old nodes for deletion
                 if node.y_coord >= canvas.row_count:
                     if node.white:
-                        #Stop white nodes from staying 'stuck' on last row.
-                        #Creates a special green node with a last_char
-                        #attribute to overwrite last white node.
+                        # Stop white nodes from staying 'stuck' on last row.
+                        # Creates a special green node with a last_char
+                        # attribute to overwrite last white node.
                         node.white = False
                         node.y_coord -= 1
                     else:
@@ -695,7 +698,7 @@ def _main(screen):
                 for f in canvas.flashers:
                     writer.draw_flasher(f)
 
-            #Rewrite nodes list without expired nodes
+            # Rewrite nodes list without expired nodes
             canvas.nodes = [node for node in canvas.nodes if not node.expired]
 
             if args.single_wave:
@@ -703,7 +706,7 @@ def _main(screen):
                     exit()
                 wave_delay -= 1
 
-            #End of loop, refresh screen
+            # End of loop, refresh screen
             if stat.countdown > 0:
                 if stat.countdown == 1:
                     stat.clear()
@@ -712,18 +715,19 @@ def _main(screen):
                 stat.countdown -= 1
             screen.refresh()
 
-            #Check for screen resize
+            # Check for screen resize
             if screen.getmaxyx() != (canvas.row_count, canvas.col_count):
                 canvas.size_changed = True
 
-            #Add delay before next loop
+            # Add delay before next loop
             curses.napms(key.delay)
 
-            #update async clock
+            # update async clock
             if async_clock:
                 async_clock -= 1
             else:
                 async_clock = 5
+
 
 def main():
     # Wrapper to allow CTRL-C to exit smoothly
@@ -731,6 +735,7 @@ def main():
         curses.wrapper(_main)
     except KeyboardInterrupt:
         pass
+
 
 if __name__ == '__main__':
     main()
