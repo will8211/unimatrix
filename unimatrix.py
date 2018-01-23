@@ -31,8 +31,8 @@ from random import randint, choice
 
 help_msg = '''
 USAGE
-  unimatrix [-a] [-b] [-c COLOR] [-h] [-l CHARACTER_LIST] [-n] [-o] [-s SPEED]
-            [-u CUSTOM_CHARACTERS]
+  unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-l CHARACTER_LIST] [-n]
+            [-o] [-s SPEED] [-u CUSTOM_CHARACTERS]
 
 OPTIONAL ARGUMENTS
   -a                   Asynchronous scroll. Lines will move at varied speeds.
@@ -41,6 +41,8 @@ OPTIONAL ARGUMENTS
 
   -c COLOR             One of: green (default), red, blue, white, yellow, cyan,
                        magenta, black
+
+  -f                   Enable "flashers," characters that continously change.
 
   -g COLOR             Background color (See -c). Defaults to keeping
                        terminal's current background.
@@ -72,6 +74,7 @@ LONG ARGUMENTS
   -a --asychronous
   -b --all-bold
   -c --color=COLOR
+  -f --flashers
   -g --bg-color=COLOR
   -h --help
   -l --character-list=CHARACTER_LIST
@@ -158,6 +161,9 @@ parser.add_argument('-c', '--color',
                     help='one of: green (default), red, blue, white, yellow, \
                           cyan, magenta, black',
                     type=str)
+parser.add_argument('-f', '--flashers',
+                    action='store_true',
+                    help='some characters will continously change in place')
 parser.add_argument('-g', '--bg-color',
                     default='default',
                     help='background color (see -c)',
@@ -282,6 +288,7 @@ class Canvas:
         for col in range(0, cols, 2):
             self.columns.append(Column(col, self.row_count))
         self.nodes = []
+        self.flashers = set()
 
         #Draw a background
         for x in range(self.row_count):
@@ -442,24 +449,32 @@ class Key_handler:
             return False
         if kp == ord(" ") or kp == ord("q") or kp == 27: #27 = ESC
             exit()
+
         elif kp == ord('-') or kp == ord('_') or kp == curses.KEY_LEFT:
-            self.delay = min(self.delay+10, 1000)
+            self.delay = min(self.delay+10, 10990)
             self.show_speed()
         elif kp == ord('=') or kp == ord('+') or kp == curses.KEY_RIGHT:
             self.delay = max(self.delay-10, 0)
             self.show_speed()
         elif kp == ord('[')  or kp == curses.KEY_DOWN:
-            self.delay = min(self.delay+100, 1000)
+            self.delay = min(self.delay+100, 10990)
             self.show_speed()
         elif kp == ord(']')  or kp == curses.KEY_UP:
             self.delay = max(self.delay-100, 0)
             self.show_speed()
+
         elif kp == ord('a'):
             args.asynchronous = not args.asynchronous
-            on_off = 'off' if args.status_off else 'on'
+            on_off = 'on' if args.asynchronous else 'off'
             self.stat.update('Async: %s' % on_off, self.delay)
         elif kp == ord('b'):
             self.cycle_bold()
+        elif kp == ord('f'):
+            args.flashers = not args.flashers
+            on_off = 'on' if args.flashers else 'off'
+            self.stat.update('Flash: %s' % on_off, self.delay)
+        elif kp == ord('o'):
+            self.toggle_status()
 
         elif kp == ord('1'):
             self.set_fg_color('Green')
@@ -498,8 +513,6 @@ class Key_handler:
             self.set_bg_color('Black')
         elif kp == ord('('):
             self.set_bg_color('default')
-        elif kp == ord('o'):
-            self.toggle_status()
 
         else:
             key_pressed = False
@@ -520,7 +533,7 @@ class Key_handler:
 
     def show_speed(self):
         """
-        Display current speed (0-100) when it is changed by keypress
+        Display current speed (-999 to 100) when it is changed by keypress
         """
         self.stat.update('Speed: %d' % (100 - self.delay//10), self.delay)
 
@@ -605,6 +618,18 @@ class Writer:
             # Override scrolling error character are pushed off the screen.
             pass
 
+    def draw_flasher(self, flasher):
+        """
+        Draws characters, included spaces to overwrite/erase characters.
+        """
+        color = curses.color_pair(1)
+        attr = choice([curses.A_BOLD, curses.A_NORMAL])
+        y = flasher[0]
+        x = flasher[1]
+        try:
+            self.screen.addstr(y, x, self.get_char(), color|attr)
+        except curses.error:
+            pass
 
 ### Main loop
 
@@ -637,7 +662,15 @@ def _main(screen):
 
             for node in canvas.nodes:
 
-                #Move node down
+                if args.flashers:
+                    if node.n_type == 'writer' and not randint(0, 9):
+                        canvas.flashers.add((node.y_coord, node.x_coord))
+                    elif node.n_type == 'eraser':
+                        try:
+                            canvas.flashers.remove((node.y_coord, node.x_coord))
+                        except KeyError:
+                            pass
+
                 if args.asynchronous:
                     if async_clock % node.async_speed == 0:
                         writer.draw(node)
@@ -645,7 +678,6 @@ def _main(screen):
                 else:
                     writer.draw(node)
                     node.y_coord += 1
-
 
                 #Mark old nodes for deletion
                 if node.y_coord >= canvas.row_count:
@@ -657,6 +689,10 @@ def _main(screen):
                         node.y_coord -= 1
                     else:
                         node.expired = True
+
+            if args.flashers and (not async_clock % 3):
+                for f in canvas.flashers:
+                    writer.draw_flasher(f)
 
             #Rewrite nodes list without expired nodes
             canvas.nodes = [node for node in canvas.nodes if not node.expired]
