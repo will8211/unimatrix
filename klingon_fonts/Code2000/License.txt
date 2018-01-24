@@ -1,0 +1,24 @@
+﻿Licensed as: Shareware 
+
+For Personal Use 
+Not for Commercial Use
+
+Created by James Kass
+
+http://www.fontspace.com/james-kass/code2000
+https://en.wikipedia.org/wiki/Code2000
+
+Code2000 is a Unicode-based TrueType font striving to eventually represent all 
+of the extended characters and symbols assigned to the Basic Multilingual 
+Plane of Unicode in a consistent typeface. 
+
+Its developer has tried to create a distinctive style or flavor for the 
+characters while remaining faithful to the classic letter forms of the 
+various scripts. 
+
+Code2000 is a work-in-process. It currently (Version 1.171) has over 60000 
+glyphs. 
+
+Although it is more-or-less readable at 12 - 18 point, it is much clearer at 
+about 24 point. Some of the dingbats should be at least 36 point. With font- 
+smoothing it looks good at normal sizes.

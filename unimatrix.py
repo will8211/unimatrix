@@ -97,10 +97,11 @@ CHARACTER SETS
   g   Lowercase Greek alphabet
   G   Uppercase Greek alphabet
   k   Japanese katakana (half-width)
-  K   Klingon "pIqaD" alphabet (Requires supporting font) *
   m   Default 'Matrix' set, equal to 'knnssss'
   n   Numbers 0-9
   o   'Old' style non-unicode set, like cmatrix. Equal to 'AaSn'
+  p   Klingon pIqaD (requires 'Horta' family font)*
+  P   Klingon pIqaD (requires 'Klingon-pIqaD' or 'Code2000' family font)*
   r   Lowercase Roman numerals ( mcclllxxxxvvvvviiiiii )
   R   Uppercase Roman numerals ( MCCLLLXXXXVVVVVIIIIII )
   s   A subset of symbols actually used in the Matrix films ( -=*_+|:<>" )
@@ -113,7 +114,12 @@ CHARACTER SETS
   letter multiple times to increase the frequency of the character set. For
   example, the default setting is equal to '-l knnssss'.
 
-  * Klingon characters should work with ConScript-compliant fonts
+  * With most modern Linux terminals (gnome-terminal, konsole, lxterminal,
+    xfce4-terminal, mate-terminal) simply having the font installed system-wide
+    is enough. The terminal will fall back to it for the Klingon, meaning that
+    you don't have to select the font in your terminal settings. 'Horta' seems
+    not to work in Konsole. Fonts may need to be set manually as fallbacks in
+    .Xresources for older terminals, such as urxvt and xterm.
 
 KEYBOARD CONTROL
   SPACE, CTRL-c or q   exit
@@ -212,12 +218,13 @@ char_set = {
     'g': 'αβγδεζηθικλμνξοπρστυφχψως',
     'G': 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ',
     'k': 'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ',
-    'K': '',
     'm': 'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890'
          '1234567890-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"',
     'n': '1234567890',
     'o': 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890'
          '`-=~!@#$%^&*()_+[]{}|\;\':",./<>?"',
+    'p': '',
+    'P': '',
     'r': 'mcclllxxxxvvvvviiiiii',
     'R': 'MCCLLLXXXXVVVVVIIIIII',
     's': '-=*_+|:<>"',
