@@ -360,8 +360,8 @@ class Column:
 
         self.drawing = not self.drawing
 
-        # Multiplier (mult) is for spawning slow asynchronous nodes more slowly
-        # in order to maintain their length
+        # Multiplier (mult) is for spawning slow-moving asynchronous nodes
+        # less frequently in order to maintain their length
         if args.asynchronous:
             mult = self.async_speed
         else:
