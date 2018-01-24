@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# coding=utf-8
 #
 # unimatrix.py
 # <https://github.com/will8211/unimatrix>
