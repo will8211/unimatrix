@@ -368,7 +368,9 @@ class Column:
             m = 1
 
         if self.drawing:
-            self.timer = randint(3 * m, (canvas.row_count - 3) * m)
+            # "max_range" prevents crash with very small terminal height
+            max_range = max((3 * m), ((canvas.row_count - 3) * m))
+            self.timer = randint(3 * m, max_range)
             if args.single_wave:
                 # A bit faster for single wave mode
                 self.timer = int(0.8 * self.timer)
