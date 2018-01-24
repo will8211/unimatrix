@@ -61,7 +61,7 @@ OPTIONAL ARGUMENTS
   -c COLOR             One of: green (default), red, blue, white, yellow, cyan,
                        magenta, black
 
-  -f                   Enable "flashers," characters that continously change.
+  -f                   Enable "flashers," characters that continuously change.
 
   -g COLOR             Background color (See -c). Defaults to keeping
                        terminal's current background.
@@ -90,7 +90,7 @@ OPTIONAL ARGUMENTS
                        terminal launches. Works well with speed at 95.
 
 LONG ARGUMENTS
-  -a --asychronous
+  -a --asynchronous
   -b --all-bold
   -c --color=COLOR
   -f --flashers
@@ -126,7 +126,7 @@ CHARACTER SETS
   S   All common keyboard symbols ( `-=~!z#$%^&*()_+[]{}|\;':",./<>?" )
   u   Custom characters selected using -u switch
 
-  For exmaple: '-l naAS' or '--character_list=naAS' will give something similar
+  For example: '-l naAS' or '--character-list=naAS' will give something similar
   to the output of the original cmatrix program in its default mode.
   '-l ACG' will use all the upper-case character sets. Use the same
   letter multiple times to increase the frequency of the character set. For
