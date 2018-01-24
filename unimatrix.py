@@ -444,25 +444,12 @@ class KeyHandler:
         """
         Handles key presses. Returns True if a key was found, False otherwise.
         """
-        key_pressed = True
         kp = self.screen.getch()
 
-        if kp == ord(" ") or kp == ord("q") or kp == 27:  # 27 = ESC
+        if kp == -1:
+            return False
+        elif kp == ord(" ") or kp == ord("q") or kp == 27:  # 27 = ESC
             exit()
-
-        elif kp == ord('-') or kp == ord('_') or kp == curses.KEY_LEFT:
-            self.delay = min(self.delay + 10, 10990)
-            self.show_speed()
-        elif kp == ord('=') or kp == ord('+') or kp == curses.KEY_RIGHT:
-            self.delay = max(self.delay - 10, 0)
-            self.show_speed()
-        elif kp == ord('[') or kp == curses.KEY_DOWN:
-            self.delay = min(self.delay + 100, 10990)
-            self.show_speed()
-        elif kp == ord(']') or kp == curses.KEY_UP:
-            self.delay = max(self.delay - 100, 0)
-            self.show_speed()
-
         elif kp == ord('a'):
             args.asynchronous = not args.asynchronous
             on_off = 'on' if args.asynchronous else 'off'
@@ -476,6 +463,21 @@ class KeyHandler:
         elif kp == ord('o'):
             self.toggle_status()
 
+        # Speed control
+        elif kp == ord('-') or kp == ord('_') or kp == curses.KEY_LEFT:
+            self.delay = min(self.delay + 10, 10990)
+            self.show_speed()
+        elif kp == ord('=') or kp == ord('+') or kp == curses.KEY_RIGHT:
+            self.delay = max(self.delay - 10, 0)
+            self.show_speed()
+        elif kp == ord('[') or kp == curses.KEY_DOWN:
+            self.delay = min(self.delay + 100, 10990)
+            self.show_speed()
+        elif kp == ord(']') or kp == curses.KEY_UP:
+            self.delay = max(self.delay - 100, 0)
+            self.show_speed()
+
+        # Foreground color control
         elif kp == ord('1'):
             self.set_fg_color('Green')
         elif kp == ord('2'):
@@ -495,6 +497,7 @@ class KeyHandler:
         elif kp == ord('9'):
             self.set_fg_color('default')
 
+        # Background color control
         elif kp == ord('!'):
             self.set_bg_color('Green')
         elif kp == ord('@'):
@@ -514,9 +517,7 @@ class KeyHandler:
         elif kp == ord('('):
             self.set_bg_color('default')
 
-        else:
-            key_pressed = False
-        return key_pressed
+        return True
 
     def set_fg_color(self, name):
         """
@@ -623,7 +624,7 @@ class Writer:
                                        curses.color_pair(1) | attr)
                 node.last_char = character
         except curses.error:
-            # Override scrolling error character are pushed off the screen.
+            # Override scrolling error if characters pushed off the screen.
             pass
 
     def draw_flasher(self, flasher):
