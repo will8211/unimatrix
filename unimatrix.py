@@ -360,22 +360,22 @@ class Column:
 
         self.drawing = not self.drawing
 
-        # Multiplier for spawning slow asynchronous nodes more slowly
+        # Multiplier (mult) is for spawning slow asynchronous nodes more slowly
         # in order to maintain their length
         if args.asynchronous:
-            m = self.async_speed
+            mult = self.async_speed
         else:
-            m = 1
+            mult = 1
 
         if self.drawing:
             # "max_range" prevents crash with very small terminal height
-            max_range = max((3 * m), ((canvas.row_count - 3) * m))
-            self.timer = randint(3 * m, max_range)
+            max_range = max((3 * mult), ((canvas.row_count - 3) * mult))
+            self.timer = randint(3 * mult, max_range)
             if args.single_wave:
                 # A bit faster for single wave mode
                 self.timer = int(0.8 * self.timer)
         else:
-            self.timer = randint(1 * m, canvas.row_count * m)
+            self.timer = randint(1 * mult, canvas.row_count * mult)
 
         x = self.x_coord
         n_type = 'eraser'
@@ -519,6 +519,9 @@ class KeyHandler:
         return key_pressed
 
     def set_fg_color(self, name):
+        """
+        Set foreground color
+        """
         self.fg = colors_str[name.lower()]
         curses.init_pair(1, self.fg, self.bg)
         if name == 'default':
@@ -526,6 +529,9 @@ class KeyHandler:
         self.stat.update(name, self.delay)
 
     def set_bg_color(self, name):
+        """
+        Set background color
+        """
         self.bg = colors_str[name.lower()]
         curses.init_pair(1, self.fg, self.bg)
         curses.init_pair(2, curses.COLOR_WHITE, self.bg)
@@ -640,8 +646,9 @@ def _main(screen):
     writer = Writer(screen)
     stat = Status(screen)
     key = KeyHandler(screen, stat)
+    # Prevent single_wave mode from shutting down too early:
     if args.single_wave:
-        wave_delay = 10  # prevent single_wave mode from shutting down too early
+        wave_delay = 10
     else:
         wave_delay = 0
 
@@ -731,7 +738,7 @@ def _main(screen):
 
 
 def main():
-    # Wrapper to allow CTRL-C to exit smoothly
+    # Wrapper to allow CTRL-C to exit smoothly:
     try:
         curses.wrapper(_main)
     except KeyboardInterrupt:
