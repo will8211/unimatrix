@@ -8,7 +8,7 @@ $ unimatrix -n -s 96 -l o
 ```
 ## Install
 
-You can use curl to install:
+Linux users can use curl to install:
 ```
 sudo curl -L https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -o /usr/local/bin/unimatrix
 sudo chmod a+rx /usr/local/bin/unimatrix
@@ -22,6 +22,8 @@ You can also install it with pip:
 ```
 pip install git+https://github.com/will8211/unimatrix.git
 ```
+
+Users of Arch-based distros can get it from the AUR as ```unimatrix-git```, although it might not be the most recent version.
 
 ## Screenshots
 
