@@ -428,24 +428,30 @@ class KeyHandler:
         self.delay = start_delay
         self.fg = start_color
         self.bg = start_bg
+        self.fg_colors = {ord(str(n)): color.capitalize()
+                          for n, color in enumerate(colors_str.keys(),
+                                                    start=1)}
+        self.bg_colors = {ord(k): color.capitalize()
+                          for k, color in zip('!@#$%^&*(', colors_str.keys())}
 
     def cycle_bold(self):
         """
         Called on 'b' press. Cycles though Bold options:
         off -> on -> all bold
         """
-        if args.all_bold:
-            args.no_bold = True
-            args.all_bold = False
-            self.stat.update('Bold: off', self.delay)
-        elif args.no_bold:
-            args.no_bold = False
-            args.all_bold = False
-            self.stat.update('Bold: on', self.delay)
-        else:
-            args.no_bold = False
-            args.all_bold = True
-            self.stat.update('Bold: all', self.delay)
+        cycle_states = [
+                ('off', True, False),
+                ('on', False, False),
+                ('all', False, True),
+                ]
+        # add the first entry at the end for easy shifting
+        cycle_states = cycle_states + cycle_states[:1]
+
+        for idx, (_, no_state, all_state) in enumerate(cycle_states):
+            if (args.no_bold, args.all_bold) == (no_state, all_state):
+                name, args.no_bold, args.all_bold = cycle_states[idx+1]
+                self.stat.update('Bold: %s' % name, self.delay)
+                break
 
     def get(self):
         """
@@ -455,76 +461,45 @@ class KeyHandler:
 
         if kp == -1:
             return False
-        elif kp == ord(" ") or kp == ord("q") or kp == 27:  # 27 = ESC
+        elif kp in (ord(" "), ord("q"), 27):  # 27 = ESC
             exit()
-        elif kp == ord('a'):
-            args.asynchronous = not args.asynchronous
-            on_off = 'on' if args.asynchronous else 'off'
-            self.stat.update('Async: %s' % on_off, self.delay)
-        elif kp == ord('b'):
-            self.cycle_bold()
-        elif kp == ord('f'):
-            args.flashers = not args.flashers
-            on_off = 'on' if args.flashers else 'off'
-            self.stat.update('Flash: %s' % on_off, self.delay)
-        elif kp == ord('o'):
-            self.toggle_status()
+        toggles = {
+                ord('a'): self.toggle_async,
+                ord('b'): self.cycle_bold,
+                ord('f'): self.toggle_flashers,
+                ord('o'): self.toggle_status
+        }
+        if kp in toggles:
+            toggles[kp]()
 
         # Speed control
-        elif kp == ord('-') or kp == ord('_') or kp == curses.KEY_LEFT:
-            self.delay = min(self.delay + 10, 10990)
-            self.show_speed()
-        elif kp == ord('=') or kp == ord('+') or kp == curses.KEY_RIGHT:
-            self.delay = max(self.delay - 10, 0)
-            self.show_speed()
-        elif kp == ord('[') or kp == curses.KEY_DOWN:
-            self.delay = min(self.delay + 100, 10990)
-            self.show_speed()
-        elif kp == ord(']') or kp == curses.KEY_UP:
-            self.delay = max(self.delay - 100, 0)
-            self.show_speed()
+        elif kp in (ord('-'), ord('_'), curses.KEY_LEFT):
+            self._decrease_speed(10)
+        elif kp in (ord('='), ord('+'), curses.KEY_RIGHT):
+            self._increase_speed(10)
+        elif kp in (ord('['), curses.KEY_DOWN):
+            self._decrease_speed(100)
+        elif kp in (ord(']'), curses.KEY_UP):
+            self._increase_speed(100)
 
         # Foreground color control
-        elif kp == ord('1'):
-            self.set_fg_color('Green')
-        elif kp == ord('2'):
-            self.set_fg_color('Red')
-        elif kp == ord('3'):
-            self.set_fg_color('Blue')
-        elif kp == ord('4'):
-            self.set_fg_color('White')
-        elif kp == ord('5'):
-            self.set_fg_color('Yellow')
-        elif kp == ord('6'):
-            self.set_fg_color('Cyan')
-        elif kp == ord('7'):
-            self.set_fg_color('Magenta')
-        elif kp == ord('8'):
-            self.set_fg_color('Black')
-        elif kp == ord('9'):
-            self.set_fg_color('default')
+        elif kp in self.fg_colors:
+            self.set_fg_color(self.fg_colors[kp])
 
         # Background color control
-        elif kp == ord('!'):
-            self.set_bg_color('Green')
-        elif kp == ord('@'):
-            self.set_bg_color('Red')
-        elif kp == ord('#'):
-            self.set_bg_color('Blue')
-        elif kp == ord('$'):
-            self.set_bg_color('White')
-        elif kp == ord('%'):
-            self.set_bg_color('Yellow')
-        elif kp == ord('^'):
-            self.set_bg_color('Cyan')
-        elif kp == ord('&'):
-            self.set_bg_color('Magenta')
-        elif kp == ord('*'):
-            self.set_bg_color('Black')
-        elif kp == ord('('):
-            self.set_bg_color('default')
-
+        elif kp in self.bg_colors:
+            self.set_bg_color(self.bg_colors[kp])
+        else:
+            return False
         return True
+
+    def _increase_speed(self, amt):
+        self.delay = max(self.delay - amt, 0)
+        self.show_speed()
+
+    def _decrease_speed(self, amt):
+        self.delay = min(self.delay + amt, 10990)
+        self.show_speed()
 
     def set_fg_color(self, name):
         """
@@ -555,9 +530,28 @@ class KeyHandler:
         """
         On 'o' keypress, turn status display on or off
         """
-        args.status_off = not args.status_off
-        on_off = 'off' if args.status_off else 'on'
-        self.stat.update('Status: %s' % on_off, self.delay)
+        self._toggle('status_off', 'Status')
+
+    def toggle_async(self):
+        """
+        Toggle asynchronous scrolling on 'a' keypress
+        """
+        self._toggle('asynchronous', 'Async')
+
+    def toggle_flashers(self):
+        """
+        Toggle flashers on 'f' keypress
+        """
+        self._toggle('flashers', 'Flash')
+
+    def _toggle(self, attribute_name, display_name):
+        """
+        Toggle a boolean attribute and display the result
+        """
+        target_value = not getattr(args, attribute_name)
+        setattr(args, attribute_name, target_value)
+        on_off = {True: 'on', False: 'off'}[target_value]
+        self.stat.update('%s: %s' % (display_name, on_off), self.delay)
 
 
 class Writer:
