@@ -154,7 +154,7 @@ KEYBOARD CONTROL
   1 to 9               set color: (1) Green   (2) Red   (3) Blue     (4) White
                                   (5) Yellow  (6) Cyan  (7) Magenta  (8) Black
                                   (9) Terminal default
-  ! to )               set background color (same colors as above, but pressing
+  ! to (               set background color (same colors as above, but pressing
                            shift + number)
 
 EXAMPLES
