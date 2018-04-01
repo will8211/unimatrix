@@ -8,7 +8,7 @@ $ unimatrix -n -s 96 -l o
 ```
 ## Install
 
-You can use curl to install:
+Linux users can use curl to install:
 ```
 sudo curl -L https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -o /usr/local/bin/unimatrix
 sudo chmod a+rx /usr/local/bin/unimatrix
@@ -22,6 +22,8 @@ You can also install it with pip:
 ```
 pip install git+https://github.com/will8211/unimatrix.git
 ```
+
+Users of Arch-based distros can get it from the AUR as ```unimatrix-git```, although it might not be the most recent version.
 
 ## Screenshots
 
@@ -48,14 +50,21 @@ Emulating CMatrix (```unimatrix -n -s 96 -l 'o'```):
 ## Manual
 ```
 USAGE
-  unimatrix [-b] [-c COLOR] [-h] [-l CHARACTER_LIST] [-n] [-o] [-s SPEED]
-            [-u CUSTOM_CHARACTERS] [-w]
+  unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-l CHARACTER_LIST] [-n]
+            [-o] [-s SPEED] [-u CUSTOM_CHARACTERS]
 
 OPTIONAL ARGUMENTS
+  -a                   Asynchronous scroll. Lines will move at varied speeds.
+
   -b                   Use only bold characters
 
   -c COLOR             One of: green (default), red, blue, white, yellow, cyan,
                        magenta, black
+
+  -f                   Enable "flashers," characters that continuously change.
+
+  -g COLOR             Background color (See -c). Defaults to keeping
+                       terminal's current background.
 
   -h                   Show this help message and exit
 
@@ -81,8 +90,11 @@ OPTIONAL ARGUMENTS
                        terminal launches. Works well with speed at 95.
 
 LONG ARGUMENTS
+  -a --asynchronous
   -b --all-bold
   -c --color=COLOR
+  -f --flashers
+  -g --bg-color=COLOR
   -h --help
   -l --character-list=CHARACTER_LIST
   -s --speed=SPEED
@@ -104,23 +116,29 @@ CHARACTER SETS
   g   Lowercase Greek alphabet
   G   Uppercase Greek alphabet
   k   Japanese katakana (half-width)
-  K   Klingon "pIqaD" alphabet (Requires supporting font) *
   m   Default 'Matrix' set, equal to 'knnssss'
   n   Numbers 0-9
   o   'Old' style non-unicode set, like cmatrix. Equal to 'AaSn'
+  p   Klingon pIqaD (requires 'Horta' family font)*
+  P   Klingon pIqaD (requires 'Klingon-pIqaD' or 'Code2000' family font)*
   r   Lowercase Roman numerals ( mcclllxxxxvvvvviiiiii )
   R   Uppercase Roman numerals ( MCCLLLXXXXVVVVVIIIIII )
   s   A subset of symbols actually used in the Matrix films ( -=*_+|:<>" )
-  S   All common keyboard symbols ( `-=~!@#$%^&*()_+[]{}|\;':",./<>?" )
+  S   All common keyboard symbols ( `-=~!z#$%^&*()_+[]{}|\;':",./<>?" )
   u   Custom characters selected using -u switch
 
-  For exmaple: '-l naAS' or '--character_list=naAS' will give something similar
+  For example: '-l naAS' or '--character_list=naAS' will give something similar
   to the output of the original cmatrix program in its default mode.
   '-l ACG' will use all the upper-case character sets. Use the same
   letter multiple times to increase the frequency of the character set. For
   example, the default setting is equal to '-l knnssss'.
 
-    * Klingon characters should work with ConScript-compliant fonts
+  * With most modern Linux terminals (gnome-terminal, konsole, lxterminal,
+    xfce4-terminal, mate-terminal) simply having the font installed system-wide
+    is enough. The terminal will fall back to it for the Klingon, meaning that
+    you don't have to select it in your terminal settings. 'Horta' seems not to
+    work in Konsole. Fonts may need to be set manually as fallbacks in
+    .Xresources for older terminals, such as urxvt and xterm.
 
 KEYBOARD CONTROL
   SPACE, CTRL-c or q   exit
@@ -128,11 +146,16 @@ KEYBOARD CONTROL
   + or RIGHT           increase speed by 1
   [ or DOWN            decrease speed by 10
   ] or UP              increase speed by 10
+  a                    toggle asynchronous scrolling
   b                    cycle through bold character options
                            (bold off-->bold on-->all bold)
-  1 to 8               set color: (1) Green   (2) Red     (3) Blue    (4) White
-                                  (5) Yellow  (6) Cyan    (7) Magenta (8) Black
+  f                    toggle flashing characters
   o                    toggle on-screen status
+  1 to 9               set color: (1) Green   (2) Red   (3) Blue     (4) White
+                                  (5) Yellow  (6) Cyan  (7) Magenta  (8) Black
+                                  (9) Terminal default
+  ! to (               set background color (same colors as above, but pressing
+                           shift + number)
 
 EXAMPLES
   Mimic default output of cmatrix (no unicode characters, works in TTY):
