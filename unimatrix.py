@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #!/usr/bin/env python3
 #
 # unimatrix.py
@@ -524,7 +526,19 @@ class KeyHandler:
         elif kp == ord('('):
             self.set_bg_color('default')
 
+        elif kp == ord('`'):
+            self.set_random_charset()
+
         return True
+
+    def set_random_charset(self):
+        global chars
+        global chars_len  
+        randomKey = choice(char_set.keys())
+        while str(randomKey) == 'u':
+            randomKey = choice(char_set.keys())
+        chars = char_set[str(randomKey)]
+        chars_len = len(chars) - 1
 
     def set_fg_color(self, name):
         """
