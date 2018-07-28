@@ -201,6 +201,10 @@ parser.add_argument('-u', '--custom-characters',
 parser.add_argument('-w', '--single-wave',
                     help='runs a single "wave" of green rain then exits',
                     action='store_true')
+parser.add_argument('-S', '--space',
+                    help='space, integer up to 5. Default=1',
+                    default=1,
+                    type=int)
 
 args = parser.parse_args()
 
@@ -231,6 +235,12 @@ char_set = {
     'S': '`-=~!@#$%^&*()_+[]{}|\;\':",./<>?"',
     'u': args.custom_characters}
 
+zhcn_chars=""
+for ch in range(0x4e00, 0x9fa6): 
+    zhcn_chars += chr(ch)
+#    zhcn_chars +=" "
+char_set["z"]=zhcn_chars
+
 colors_str = {
     'green': curses.COLOR_GREEN,
     'red': curses.COLOR_RED,
@@ -246,6 +256,11 @@ start_color = colors_str[args.color]
 start_bg = colors_str[args.bg_color]
 
 speed = args.speed
+
+width_space = args.space
+if width_space >5 :
+    width_space=5
+
 start_delay = (100 - speed) * 10
 
 runtime = None
@@ -293,7 +308,8 @@ class Canvas:
         self.row_count = rows
         self.size_changed = False
         self.columns = []
-        for col in range(0, cols, 2):
+        #for col in range(0, cols, 4):
+        for col in range(0, cols, width_space*2):
             self.columns.append(Column(col, self.row_count))
         self.nodes = []
         self.flashers = set()
