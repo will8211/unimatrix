@@ -60,6 +60,8 @@ OPTIONAL ARGUMENTS
                        refreshing, 100 uses none. Use negative numbers for
                        even lower speeds. Default=85
 
+  -S SPACE             Integer up to 5. space between coloumns 
+
   -t TIME              Exit the process after TIME seconds
 
   -u CUSTOM_CHARACTERS Your own string of characters to display. Enclose in
@@ -79,6 +81,7 @@ LONG ARGUMENTS
   -h --help
   -l --character-list=CHARACTER_LIST
   -s --speed=SPEED
+  -S --space=space
   -n --no-bold
   -o --status-off
   -t --time
@@ -107,6 +110,7 @@ CHARACTER SETS
   s   A subset of symbols actually used in the Matrix films ( -=*_+|:<>" )
   S   All common keyboard symbols ( `-=~!z#$%^&*()_+[]{}|\;':",./<>?" )
   u   Custom characters selected using -u switch
+  z   chinese characters
 
   For example: '-l naAS' or '--character_list=naAS' will give something similar
   to the output of the original cmatrix program in its default mode.
@@ -308,7 +312,7 @@ class Canvas:
         self.row_count = rows
         self.size_changed = False
         self.columns = []
-        #for col in range(0, cols, 4):
+        #for col in range(0, cols, 2):
         for col in range(0, cols, width_space*2):
             self.columns.append(Column(col, self.row_count))
         self.nodes = []
