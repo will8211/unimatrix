@@ -101,11 +101,11 @@ LONG ARGUMENTS
   -n --no-bold
   -o --status-off
   -t --time
-  -u --custom_characters=CUSTOM_CHARACTERS
-  -w --single_wave
+  -u --custom-characters=CUSTOM_CHARACTERS
+  -w --single-wave
 
 CHARACTER SETS
-  When using '-l' or '--character_list=' option, follow it with one or more of
+  When using '-l' or '--character-list=' option, follow it with one or more of
   the following letters:
 
   a   Lowercase alphabet
@@ -127,7 +127,7 @@ CHARACTER SETS
   S   All common keyboard symbols ( `-=~!z#$%^&*()_+[]{}|\;':",./<>?" )
   u   Custom characters selected using -u switch
 
-  For example: '-l naAS' or '--character_list=naAS' will give something similar
+  For example: '-l naAS' or '--character-list=naAS' will give something similar
   to the output of the original cmatrix program in its default mode.
   '-l ACG' will use all the upper-case character sets. Use the same
   letter multiple times to increase the frequency of the character set. For
