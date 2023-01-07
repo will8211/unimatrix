@@ -3,51 +3,55 @@
 Python script to simulate the display from "The Matrix" in terminal. Uses half-width katakana unicode characters by default, but can use custom character sets. Accepts keyboard controls while running.
 
 Based on CMatrix by Chris Allegretta and Abishek V. Ashok. The following option should produce virtually the same output as CMatrix:
+
 ```
 $ unimatrix -n -s 96 -l o
 ```
+
 ## Install
 
 Linux users can use curl to install:
+
 ```
 sudo curl -L https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -o /usr/local/bin/unimatrix
 sudo chmod a+rx /usr/local/bin/unimatrix
 ```
+
 If you do not have curl, you can alternatively use a recent wget:
+
 ```
 sudo wget https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -O /usr/local/bin/unimatrix
 sudo chmod a+rx /usr/local/bin/unimatrix
 ```
+
 You can also install it with pip:
+
 ```
 pip install git+https://github.com/will8211/unimatrix.git
 ```
 
-Users of Arch-based distros can get it from the AUR as ```unimatrix-git```, although it might not be the most recent version.
+Users of Arch-based distros can get it from the AUR as `unimatrix-git`, although it might not be the most recent version.
 
 ## Screenshots
 
 Default settings:
 
-![screenshot1](/screenshot1.png?raw=true "Default")
+![screenshot1](/screenshot1.png?raw=true 'Default')
 
+Blue with custom character set 'Linux' (`$ unimatrix -c blue -u 'Linux'`):
 
-Blue with custom character set 'Linux' (```$ unimatrix -c blue -u 'Linux'```):
+![screenshot2](/screenshot2.png?raw=true 'Custom character set')
 
-![screenshot2](/screenshot2.png?raw=true "Custom character set")
+Yellow with alternate character set: Emoji (`$ unimatrix -c yellow -l 'e'`):
 
+![screenshot3](/screenshot3.png?raw=true 'Alternate character set: Emoji')
 
-Yellow with alternate character set: Emoji (```$ unimatrix -c yellow -l 'e'```):
+Emulating CMatrix (`unimatrix -n -s 96 -l 'o'`):
 
-![screenshot3](/screenshot3.png?raw=true "Alternate character set: Emoji")
-
-
-Emulating CMatrix (```unimatrix -n -s 96 -l 'o'```):
-
-![screenshot4](/screenshot4.png?raw=true "Emulating CMatrix")
-
+![screenshot4](/screenshot4.png?raw=true 'Emulating CMatrix')
 
 ## Manual
+
 ```
 USAGE
   unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-l CHARACTER_LIST] [-n]
@@ -68,6 +72,8 @@ OPTIONAL ARGUMENTS
 
   -h                   Show this help message and exit
 
+  -i                   Ignore keyboard input (use only with -t or -w)
+
   -l CHARACTER_LIST    Select character set(s) using a string over letter
                        codes (see CHARACTER SETS below.)
 
@@ -87,7 +93,8 @@ OPTIONAL ARGUMENTS
 
   -w                   Single-wave mode: Does a single burst of green rain,
                        exits. You can put in a .bashrc file to run when your
-                       terminal launches. Works well with speed at 95.
+                       terminal launches. Works well with speed at 95. See -i
+                       to not block keyboard input during visual effect.
 
 LONG ARGUMENTS
   -a --asynchronous
@@ -96,6 +103,7 @@ LONG ARGUMENTS
   -f --flashers
   -g --bg-color=COLOR
   -h --help
+  -i --ignore-keyboard
   -l --character-list=CHARACTER_LIST
   -s --speed=SPEED
   -n --no-bold
@@ -176,4 +184,4 @@ EXAMPLES
 
 Unimatrix is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-Unimatrix is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License at <http://www.gnu.org/licenses/> for more details.
+Unimatrix is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License at <http://www.gnu.org/licenses/> for more details.
