@@ -50,8 +50,8 @@ Emulating CMatrix (```unimatrix -n -s 96 -l 'o'```):
 ## Manual
 ```
 USAGE
-  unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-l CHARACTER_LIST] [-n]
-            [-o] [-s SPEED] [-u CUSTOM_CHARACTERS]
+  unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-i] [-l CHARACTER_LIST]
+            [-n] [-o] [-s SPEED] [-u CUSTOM_CHARACTERS]
 
 OPTIONAL ARGUMENTS
   -a                   Asynchronous scroll. Lines will move at varied speeds.
@@ -67,6 +67,8 @@ OPTIONAL ARGUMENTS
                        terminal's current background.
 
   -h                   Show this help message and exit
+
+  -i                   Ignore keyboard input
 
   -l CHARACTER_LIST    Select character set(s) using a string over letter
                        codes (see CHARACTER SETS below.)
@@ -87,7 +89,8 @@ OPTIONAL ARGUMENTS
 
   -w                   Single-wave mode: Does a single burst of green rain,
                        exits. You can put in a .bashrc file to run when your
-                       terminal launches. Works well with speed at 95.
+                       terminal launches. Works well with speed at 95. See -i
+                       to not block keyboard input during visual effect.
 
 LONG ARGUMENTS
   -a --asynchronous
@@ -96,6 +99,7 @@ LONG ARGUMENTS
   -f --flashers
   -g --bg-color=COLOR
   -h --help
+  -i --ignore-keyboard
   -l --character-list=CHARACTER_LIST
   -s --speed=SPEED
   -n --no-bold
