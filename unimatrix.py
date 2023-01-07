@@ -49,6 +49,8 @@ OPTIONAL ARGUMENTS
 
   -h                   Show this help message and exit
 
+  -i                   Ignore keyboard (must use with -t or -w)
+
   -l CHARACTER_LIST    Select character set(s) using a string over letter
                        codes (see CHARACTER SETS below.)
 
@@ -77,6 +79,7 @@ LONG ARGUMENTS
   -f --flashers
   -g --bg-color=COLOR
   -h --help
+  -i --ignore-keyboard
   -l --character-list=CHARACTER_LIST
   -s --speed=SPEED
   -n --no-bold
@@ -178,6 +181,9 @@ parser.add_argument('-g', '--bg-color',
 parser.add_argument('-h', '--help',
                     help='display extended usage information and exit.',
                     action='store_true')
+parser.add_argument('-i', '--ignore-keyboard',
+                    help='ignore all keyboard input.',
+                    action='store_true')
 parser.add_argument('-l', '--character-list',
                     help='character set. See details below',
                     type=str)
@@ -252,6 +258,11 @@ runtime = None
 
 if args.time:
     runtime = args.time
+
+# "-i" only when using "-t" or "-w"
+if args.ignore_keyboard and not (args.time or args.single_wave):
+    print("Error: '-i' can only be used with '-t' or '-w'")
+    exit()
 
 # "-l" option has been used
 if args.character_list:
@@ -451,6 +462,9 @@ class KeyHandler:
         """
         Handles key presses. Returns True if a key was found, False otherwise.
         """
+        if args.ignore_keyboard:
+            return False;
+
         kp = self.screen.getch()
 
         if kp == -1:
