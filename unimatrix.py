@@ -49,7 +49,7 @@ OPTIONAL ARGUMENTS
 
   -h                   Show this help message and exit
 
-  -i                   Ignore keyboard (must use with -t or -w)
+  -i                   Ignore keyboard
 
   -l CHARACTER_LIST    Select character set(s) using a string over letter
                        codes (see CHARACTER SETS below.)
