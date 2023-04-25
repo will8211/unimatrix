@@ -9,7 +9,7 @@
 #
 # Based on CMatrix by Chris Allegretta and Abishek V. Ashok. The following
 # option should produce virtually the same output as CMatrix:
-# $ unimatrix -f -n -s 96 -l o
+# $ unimatrix -f -a -n -l o
 #
 # Unimatrix is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -60,7 +60,7 @@ OPTIONAL ARGUMENTS
 
   -s SPEED             Integer up to 100. 0 uses a one-second delay before
                        refreshing, 100 uses none. Use negative numbers for
-                       even lower speeds. Default=85
+                       even lower speeds. Default=96
 
   -t TIME              Exit the process after TIME seconds
 
@@ -73,7 +73,7 @@ OPTIONAL ARGUMENTS
                        terminal launches. Works well with speed at 95.
 
 LONG ARGUMENTS
-  -a --asynchronous
+  -a --asynchronous-off
   -b --all-bold
   -c --color=COLOR
   -f --flashers-off
@@ -143,7 +143,7 @@ KEYBOARD CONTROL
 
 EXAMPLES
   Mimic default output of cmatrix (no unicode characters, works in TTY):
-    $ unimatrix -n -s 96 -l o
+    $ unimatrix -f -a -n -l o
 
   Use the letters from the name of your favorite operating system in bold blue:
     $ unimatrix -B -u Linux -c blue
@@ -160,9 +160,9 @@ EXAMPLES
 
 parser = argparse.ArgumentParser(add_help=False)
 
-parser.add_argument('-a', '--asynchronous',
+parser.add_argument('-a', '--asynchronous-off',
                     action='store_true',
-                    help='use asynchronous scrolling')
+                    help='disable asynchronous scrolling')
 parser.add_argument('-b', '--all-bold',
                     action='store_true',
                     help='use all bold characters')
@@ -194,8 +194,8 @@ parser.add_argument('-o', '--status-off',
                     action='store_true',
                     help='Disable on-screen status')
 parser.add_argument('-s', '--speed',
-                    help='speed, integer up to 100. Default=85',
-                    default=85,
+                    help='speed, integer up to 100. Default=96',
+                    default=96,
                     type=int)
 parser.add_argument('-t', '--time',
                     help='time. See details below',
@@ -375,7 +375,7 @@ class Column:
 
         # Multiplier (mult) is for spawning slow-moving asynchronous nodes
         # less frequently in order to maintain their length
-        if args.asynchronous:
+        if not args.asynchronous_off:
             mult = self.async_speed
         else:
             mult = 1
@@ -467,8 +467,8 @@ class KeyHandler:
         elif kp == ord(" ") or kp == ord("q") or kp == 27:  # 27 = ESC
             exit()
         elif kp == ord('a'):
-            args.asynchronous = not args.asynchronous
-            on_off = 'on' if args.asynchronous else 'off'
+            args.asynchronous_off = not args.asynchronous_off
+            on_off = 'off' if args.asynchronous_off else 'on'
             self.stat.update('Async: %s' % on_off, self.delay)
         elif kp == ord('b'):
             self.cycle_bold()
@@ -700,7 +700,7 @@ def _main(screen):
                         except KeyError:
                             pass
 
-                if args.asynchronous:
+                if not args.asynchronous_off:
                     if async_clock % node.async_speed == 0:
                         writer.draw(node)
                         node.y_coord += 1
