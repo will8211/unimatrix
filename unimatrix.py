@@ -9,7 +9,7 @@
 #
 # Based on CMatrix by Chris Allegretta and Abishek V. Ashok. The following
 # option should produce virtually the same output as CMatrix:
-# $ unimatrix -n -s 96 -l o
+# $ unimatrix -f -n -s 96 -l o
 #
 # Unimatrix is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -42,7 +42,7 @@ OPTIONAL ARGUMENTS
   -c COLOR             One of: green (default), red, blue, white, yellow, cyan,
                        magenta, black
 
-  -f                   Enable "flashers," characters that continuously change.
+  -f                   Disable "flashers," characters that continuously change.
 
   -g COLOR             Background color (See -c). Defaults to keeping
                        terminal's current background.
@@ -76,7 +76,7 @@ LONG ARGUMENTS
   -a --asynchronous
   -b --all-bold
   -c --color=COLOR
-  -f --flashers
+  -f --flashers-off
   -g --bg-color=COLOR
   -h --help
   -i --ignore-keyboard
@@ -171,9 +171,9 @@ parser.add_argument('-c', '--color',
                     help='one of: green (default), red, blue, white, yellow, \
                           cyan, magenta, black',
                     type=str)
-parser.add_argument('-f', '--flashers',
+parser.add_argument('-f', '--flashers-off',
                     action='store_true',
-                    help='some characters will continuously change in place')
+                    help='turn off characters that change in place')
 parser.add_argument('-g', '--bg-color',
                     default='default',
                     help='background color (see -c)',
@@ -473,8 +473,8 @@ class KeyHandler:
         elif kp == ord('b'):
             self.cycle_bold()
         elif kp == ord('f'):
-            args.flashers = not args.flashers
-            on_off = 'on' if args.flashers else 'off'
+            args.flashers_off = not args.flashers_off
+            on_off = 'off' if args.flashers_off else 'on'
             self.stat.update('Flash: %s' % on_off, self.delay)
         elif kp == ord('o'):
             self.toggle_status()
@@ -691,7 +691,7 @@ def _main(screen):
 
             for node in canvas.nodes:
 
-                if args.flashers:
+                if not args.flashers_off:
                     if node.n_type == 'writer' and not randint(0, 9):
                         canvas.flashers.add((node.y_coord, node.x_coord))
                     elif node.n_type == 'eraser':
@@ -719,7 +719,7 @@ def _main(screen):
                     else:
                         node.expired = True
 
-            if args.flashers and (not async_clock % 3):
+            if not args.flashers_off and (not async_clock % 3):
                 for f in canvas.flashers:
                     writer.draw_flasher(f)
 
