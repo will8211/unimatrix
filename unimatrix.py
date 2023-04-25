@@ -31,11 +31,12 @@ from random import choice, randint
 
 help_msg = '''
 USAGE
-  unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-l CHARACTER_LIST] [-n]
-            [-o] [-s SPEED] [-u CUSTOM_CHARACTERS]
+  unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-i] [-l CHARACTER_LIST]
+            [-n] [-o] [-s SPEED] [-u CUSTOM_CHARACTERS]
 
 OPTIONAL ARGUMENTS
-  -a                   Asynchronous scroll. Lines will move at varied speeds.
+  -a                   Disable asynchronous scroll (lines moving at varied speeds).
+                       Good for low-resource systems
 
   -b                   Use only bold characters
 
@@ -43,6 +44,7 @@ OPTIONAL ARGUMENTS
                        magenta, black
 
   -f                   Disable "flashers," characters that continuously change.
+                       Good for low-resource systems
 
   -g COLOR             Background color (See -c). Defaults to keeping
                        terminal's current background.
