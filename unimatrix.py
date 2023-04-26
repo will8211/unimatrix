@@ -9,7 +9,7 @@
 #
 # Based on CMatrix by Chris Allegretta and Abishek V. Ashok. The following
 # option should produce virtually the same output as CMatrix:
-# $ unimatrix -n -s 96 -l o
+# $ unimatrix -f -a -n -l o
 #
 # Unimatrix is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -31,18 +31,20 @@ from random import choice, randint
 
 help_msg = '''
 USAGE
-  unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-l CHARACTER_LIST] [-n]
-            [-o] [-s SPEED] [-u CUSTOM_CHARACTERS]
+  unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-i] [-l CHARACTER_LIST]
+            [-n] [-o] [-s SPEED] [-u CUSTOM_CHARACTERS]
 
 OPTIONAL ARGUMENTS
-  -a                   Asynchronous scroll. Lines will move at varied speeds.
+  -a                   Disable asynchronous scroll (lines moving at varied speeds).
+                       Good for low-resource systems
 
   -b                   Use only bold characters
 
   -c COLOR             One of: green (default), red, blue, white, yellow, cyan,
                        magenta, black
 
-  -f                   Enable "flashers," characters that continuously change.
+  -f                   Disable "flashers," characters that continuously change.
+                       Good for low-resource systems
 
   -g COLOR             Background color (See -c). Defaults to keeping
                        terminal's current background.
@@ -60,7 +62,7 @@ OPTIONAL ARGUMENTS
 
   -s SPEED             Integer up to 100. 0 uses a one-second delay before
                        refreshing, 100 uses none. Use negative numbers for
-                       even lower speeds. Default=85
+                       even lower speeds. Default=96
 
   -t TIME              Exit the process after TIME seconds
 
@@ -73,10 +75,10 @@ OPTIONAL ARGUMENTS
                        terminal launches. Works well with speed at 95.
 
 LONG ARGUMENTS
-  -a --asynchronous
+  -a --asynchronous-off
   -b --all-bold
   -c --color=COLOR
-  -f --flashers
+  -f --flashers-off
   -g --bg-color=COLOR
   -h --help
   -i --ignore-keyboard
@@ -143,7 +145,7 @@ KEYBOARD CONTROL
 
 EXAMPLES
   Mimic default output of cmatrix (no unicode characters, works in TTY):
-    $ unimatrix -n -s 96 -l o
+    $ unimatrix -f -a -n -l o
 
   Use the letters from the name of your favorite operating system in bold blue:
     $ unimatrix -B -u Linux -c blue
@@ -160,9 +162,9 @@ EXAMPLES
 
 parser = argparse.ArgumentParser(add_help=False)
 
-parser.add_argument('-a', '--asynchronous',
+parser.add_argument('-a', '--asynchronous-off',
                     action='store_true',
-                    help='use asynchronous scrolling')
+                    help='disable asynchronous scrolling')
 parser.add_argument('-b', '--all-bold',
                     action='store_true',
                     help='use all bold characters')
@@ -171,9 +173,9 @@ parser.add_argument('-c', '--color',
                     help='one of: green (default), red, blue, white, yellow, \
                           cyan, magenta, black',
                     type=str)
-parser.add_argument('-f', '--flashers',
+parser.add_argument('-f', '--flashers-off',
                     action='store_true',
-                    help='some characters will continuously change in place')
+                    help='turn off characters that change in place')
 parser.add_argument('-g', '--bg-color',
                     default='default',
                     help='background color (see -c)',
@@ -194,8 +196,8 @@ parser.add_argument('-o', '--status-off',
                     action='store_true',
                     help='Disable on-screen status')
 parser.add_argument('-s', '--speed',
-                    help='speed, integer up to 100. Default=85',
-                    default=85,
+                    help='speed, integer up to 100. Default=96',
+                    default=96,
                     type=int)
 parser.add_argument('-t', '--time',
                     help='time. See details below',
@@ -375,7 +377,7 @@ class Column:
 
         # Multiplier (mult) is for spawning slow-moving asynchronous nodes
         # less frequently in order to maintain their length
-        if args.asynchronous:
+        if not args.asynchronous_off:
             mult = self.async_speed
         else:
             mult = 1
@@ -467,14 +469,14 @@ class KeyHandler:
         elif kp == ord(" ") or kp == ord("q") or kp == 27:  # 27 = ESC
             exit()
         elif kp == ord('a'):
-            args.asynchronous = not args.asynchronous
-            on_off = 'on' if args.asynchronous else 'off'
+            args.asynchronous_off = not args.asynchronous_off
+            on_off = 'off' if args.asynchronous_off else 'on'
             self.stat.update('Async: %s' % on_off, self.delay)
         elif kp == ord('b'):
             self.cycle_bold()
         elif kp == ord('f'):
-            args.flashers = not args.flashers
-            on_off = 'on' if args.flashers else 'off'
+            args.flashers_off = not args.flashers_off
+            on_off = 'off' if args.flashers_off else 'on'
             self.stat.update('Flash: %s' % on_off, self.delay)
         elif kp == ord('o'):
             self.toggle_status()
@@ -691,7 +693,7 @@ def _main(screen):
 
             for node in canvas.nodes:
 
-                if args.flashers:
+                if not args.flashers_off:
                     if node.n_type == 'writer' and not randint(0, 9):
                         canvas.flashers.add((node.y_coord, node.x_coord))
                     elif node.n_type == 'eraser':
@@ -700,7 +702,7 @@ def _main(screen):
                         except KeyError:
                             pass
 
-                if args.asynchronous:
+                if not args.asynchronous_off:
                     if async_clock % node.async_speed == 0:
                         writer.draw(node)
                         node.y_coord += 1
@@ -719,7 +721,7 @@ def _main(screen):
                     else:
                         node.expired = True
 
-            if args.flashers and (not async_clock % 3):
+            if not args.flashers_off and (not async_clock % 3):
                 for f in canvas.flashers:
                     writer.draw_flasher(f)
 

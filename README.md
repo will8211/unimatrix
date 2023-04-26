@@ -48,20 +48,21 @@ Emulating CMatrix (```unimatrix -n -s 96 -l 'o'```):
 
 
 ## Manual
-```
 USAGE
   unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-i] [-l CHARACTER_LIST]
             [-n] [-o] [-s SPEED] [-u CUSTOM_CHARACTERS]
 
 OPTIONAL ARGUMENTS
-  -a                   Asynchronous scroll. Lines will move at varied speeds.
+  -a                   Disable asynchronous scroll (lines moving at varied speeds).
+                       Good for low-resource systems
 
   -b                   Use only bold characters
 
   -c COLOR             One of: green (default), red, blue, white, yellow, cyan,
                        magenta, black
 
-  -f                   Enable "flashers," characters that continuously change.
+  -f                   Disable "flashers," characters that continuously change.
+                       Good for low-resource systems
 
   -g COLOR             Background color (See -c). Defaults to keeping
                        terminal's current background.
@@ -79,7 +80,7 @@ OPTIONAL ARGUMENTS
 
   -s SPEED             Integer up to 100. 0 uses a one-second delay before
                        refreshing, 100 uses none. Use negative numbers for
-                       even lower speeds. Default=85
+                       even lower speeds. Default=96
 
   -t TIME              Exit the process after TIME seconds
 
@@ -89,14 +90,13 @@ OPTIONAL ARGUMENTS
 
   -w                   Single-wave mode: Does a single burst of green rain,
                        exits. You can put in a .bashrc file to run when your
-                       terminal launches. Works well with speed at 95. See -i
-                       to not block keyboard input during visual effect.
+                       terminal launches. Works well with speed at 95.
 
 LONG ARGUMENTS
-  -a --asynchronous
+  -a --asynchronous-off
   -b --all-bold
   -c --color=COLOR
-  -f --flashers
+  -f --flashers-off
   -g --bg-color=COLOR
   -h --help
   -i --ignore-keyboard
@@ -140,8 +140,8 @@ CHARACTER SETS
   * With most modern Linux terminals (gnome-terminal, konsole, lxterminal,
     xfce4-terminal, mate-terminal) simply having the font installed system-wide
     is enough. The terminal will fall back to it for the Klingon, meaning that
-    you don't have to select it in your terminal settings. 'Horta' seems not to
-    work in Konsole. Fonts may need to be set manually as fallbacks in
+    you don't have to select the font in your terminal settings. 'Horta' seems
+    not to work in Konsole. Fonts may need to be set manually as fallbacks in
     .Xresources for older terminals, such as urxvt and xterm.
 
 KEYBOARD CONTROL
@@ -163,7 +163,7 @@ KEYBOARD CONTROL
 
 EXAMPLES
   Mimic default output of cmatrix (no unicode characters, works in TTY):
-    $ unimatrix -n -s 96 -l o
+    $ unimatrix -f -a -n -l o
 
   Use the letters from the name of your favorite operating system in bold blue:
     $ unimatrix -B -u Linux -c blue
