@@ -169,5 +169,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+dev/
 
 # End of https://www.gitignore.io/api/emacs,python

@@ -9,7 +9,7 @@
 #
 # Based on CMatrix by Chris Allegretta and Abishek V. Ashok. The following
 # option should produce virtually the same output as CMatrix:
-# $ unimatrix -f -a -n -l o
+# $ unimatrix -afn -l o
 #
 # Unimatrix is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -26,25 +26,22 @@
 
 import argparse
 import curses
+import json
 import time
 from random import choice, randint
 
 help_msg = '''
 USAGE
-  unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-i] [-l CHARACTER_LIST]
+  unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-i] [-l CHARACTER_SET]
             [-n] [-o] [-s SPEED] [-u CUSTOM_CHARACTERS]
 
 OPTIONAL ARGUMENTS
-  -a                   Disable asynchronous scroll (lines moving at varied speeds).
-                       Good for low-resource systems
-
   -b                   Use only bold characters
+
+  -B                   Do not use bold characters (overrides -b)
 
   -c COLOR             One of: green (default), red, blue, white, yellow, cyan,
                        magenta, black
-
-  -f                   Disable "flashers," characters that continuously change.
-                       Good for low-resource systems
 
   -g COLOR             Background color (See -c). Defaults to keeping
                        terminal's current background.
@@ -53,65 +50,41 @@ OPTIONAL ARGUMENTS
 
   -i                   Ignore keyboard
 
-  -l CHARACTER_LIST    Select character set(s) using a string over letter
+  -l CHARACTER_SET     Select character set(s) using a string over letter
                        codes (see CHARACTER SETS below.)
 
-  -n                   Do not use bold characters (overrides -b)
-
-  -o                   Disable on-screen status
-
-  -s SPEED             Integer up to 100. 0 uses a one-second delay before
-                       refreshing, 100 uses none. Use negative numbers for
-                       even lower speeds. Default=96
+  -s SPEED             One of "slowest", "slow", "fast", "fastest",
+                       or an number value representing milliseconds between refreshs.
+                       Defaults to  
 
   -t TIME              Exit the process after TIME seconds
 
-  -u CUSTOM_CHARACTERS Your own string of characters to display. Enclose in
-                       single quotes ('') to escape special characters. For
-                       example: -u '#$('
-
   -w                   Single-wave mode: Does a single burst of green rain,
                        exits. You can put in a .bashrc file to run when your
-                       terminal launches. Works well with speed at 95.
+                       terminal launches.
+
+  -y                   Disable cycling characters that continuously change in place.
+                       Good for low-resource systems
 
 LONG ARGUMENTS
   -a --asynchronous-off
   -b --all-bold
+  -B --bold-off
   -c --color=COLOR
   -f --flashers-off
   -g --bg-color=COLOR
   -h --help
   -i --ignore-keyboard
-  -l --character-list=CHARACTER_LIST
+  -l --character-set=CHARACTER_SET
   -s --speed=SPEED
-  -n --no-bold
+
   -o --status-off
   -t --time
-  -u --custom-characters=CUSTOM_CHARACTERS
-  -w --single-wave
+  -w --single_wave
 
 CHARACTER SETS
-  When using '-l' or '--character-list=' option, follow it with one or more of
+  When using '-l' or '--character-set=' option, follow it with one or more of
   the following letters:
-
-  a   Lowercase alphabet
-  A   Uppercase alphabet
-  c   Lowercase Russian Cyrillic alphabet
-  C   Uppercase Russian Cyrillic alphabet
-  e   A few common emoji ( ☺☻✌♡♥❤⚘❀❃❁✼☀✌♫♪☃❄❅❆☕☂★ )
-  g   Lowercase Greek alphabet
-  G   Uppercase Greek alphabet
-  k   Japanese katakana (half-width)
-  m   Default 'Matrix' set, equal to 'knnssss'
-  n   Numbers 0-9
-  o   'Old' style non-unicode set, like cmatrix. Equal to 'AaSn'
-  p   Klingon pIqaD (requires 'Horta' family font)*
-  P   Klingon pIqaD (requires 'Klingon-pIqaD' or 'Code2000' family font)*
-  r   Lowercase Roman numerals ( mcclllxxxxvvvvviiiiii )
-  R   Uppercase Roman numerals ( MCCLLLXXXXVVVVVIIIIII )
-  s   A subset of symbols actually used in the Matrix films ( -=*_+|:<>" )
-  S   All common keyboard symbols ( `-=~!z#$%^&*()_+[]{}|\;':",./<>?" )
-  u   Custom characters selected using -u switch
 
   For example: '-l naAS' or '--character-list=naAS' will give something similar
   to the output of the original cmatrix program in its default mode.
@@ -145,7 +118,7 @@ KEYBOARD CONTROL
 
 EXAMPLES
   Mimic default output of cmatrix (no unicode characters, works in TTY):
-    $ unimatrix -f -a -n -l o
+    $ unimatrix -afnl o
 
   Use the letters from the name of your favorite operating system in bold blue:
     $ unimatrix -B -u Linux -c blue
@@ -186,7 +159,7 @@ parser.add_argument('-h', '--help',
 parser.add_argument('-i', '--ignore-keyboard',
                     help='ignore all keyboard input.',
                     action='store_true')
-parser.add_argument('-l', '--character-list',
+parser.add_argument('-l', '--character-set',
                     help='character set. See details below',
                     type=str)
 parser.add_argument('-n', '--no-bold',
@@ -216,28 +189,10 @@ if args.help:
     print(help_msg)
     exit()
 
-char_set = {
+standard_char_set = 'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ12345678901234567890-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"'
 
-    'a': 'qwertyuiopasdfghjklzxcvbnm',
-    'A': 'QWERTYUIOPASDFGHJKLZXCVBNM',
-    'c': 'абвгдежзиклмнопрстуфхцчшщъыьэюя',
-    'C': 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ',
-    'e': '☺☻✌♡♥❤⚘❀❃❁✼☀✌♫♪☃❄❅❆☕☂★',
-    'g': 'αβγδεζηθικλμνξοπρστυφχψως',
-    'G': 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ',
-    'k': 'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ',
-    'm': 'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890'
-         '1234567890-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"',
-    'n': '1234567890',
-    'o': 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890'
-         '`-=~!@#$%^&*()_+[]{}|\;\':",./<>?"',
-    'p': '',
-    'P': '',
-    'r': 'mcclllxxxxvvvvviiiiii',
-    'R': 'MCCLLLXXXXVVVVVIIIIII',
-    's': '-=*_+|:<>"',
-    'S': '`-=~!@#$%^&*()_+[]{}|\;\':",./<>?"',
-    'u': args.custom_characters}
+with open('char_sets.json') as f:
+    char_set = json.load(f)
 
 colors_str = {
     'green': curses.COLOR_GREEN,
@@ -253,8 +208,22 @@ colors_str = {
 start_color = colors_str[args.color]
 start_bg = colors_str[args.bg_color]
 
-speed = args.speed
-start_delay = (100 - speed) * 10
+if not args.speed:
+    start_delay = 40 
+elif args.speed == 'slower':
+    start_delay = 240
+elif args.speed == 'slow':
+    start_delay = 120
+elif args.speed == 'fast':
+    start_delay = 20 
+elif args.speed == 'faster':
+    start_delay = 5 
+else:
+    try:
+        start_delay = int(args.speed)
+    except ValueError:
+        print("Enter a valid value for speed")
+        exit(1)
 
 runtime = None
 
@@ -262,14 +231,14 @@ if args.time:
     runtime = args.time
 
 # "-l" option has been used
-if args.character_list:
+if args.character_set:
     chars = ''
-    for letter in args.character_list:
+    for char_set_name in args.character_set:
         try:
-            chars += char_set[letter]
+            chars += char_set[char_set_name]
         except KeyError:
             print("Letter '%s' does not represent a valid character list."
-                  % letter)
+                  % char_set_name)
             exit()
 
 # "-l" not used, but "-u" is set
@@ -460,7 +429,7 @@ class KeyHandler:
         Handles key presses. Returns True if a key was found, False otherwise.
         """
         if args.ignore_keyboard:
-            return False;
+            return False
 
         kp = self.screen.getch()
 

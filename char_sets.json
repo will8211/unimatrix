@@ -1,0 +1,19 @@
+{
+    "alphabet_lower": "qwertyuiopasdfghjklzxcvbnm",
+    "alphabet_upper": "QWERTYUIOPASDFGHJKLZXCVBNM",
+    "chinese_simplified": {"start": "0x4e00", "end": "0x9fa6"},
+    "cyrillic_lower": "абвгдежзиклмнопрстуфхцчшщъыьэюя",
+    "cyrillic_upper": "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ",
+    "emoji": "☺☻✌♡♥❤⚘❀❃❁✼☀✌♫♪☃❄❅❆☕☂★",
+    "greek_lower": "αβγδεζηθικλμνξοπρστυφχψως",
+    "greek_upper": "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",
+    "klingon": "ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ",
+    "numbers": "1234567890",
+    "cmatrix": "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890`-=~!@#$%^&*()_+[]{}|\\;':\",./<>?",
+    "klingon-horta": "",
+    "klingon-picad": "",
+    "klingon-code2000": "",
+    "numerals_lower": "mcclllxxxxvvvvviiiiii",
+    "numerals_upper": "MCCLLLXXXXVVVVVIIIIII",
+    "symbols": "`-=~!@#$%^&*()_+[]{}|\\;':\",./<>?"
+}

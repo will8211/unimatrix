@@ -4,7 +4,7 @@ Python script to simulate the display from "The Matrix" in terminal. Uses half-w
 
 Based on CMatrix by Chris Allegretta and Abishek V. Ashok. The following option should produce virtually the same output as CMatrix:
 ```
-$ unimatrix -n -s 96 -l o
+$ unimatrix -afn -l o
 ```
 ## Install
 
