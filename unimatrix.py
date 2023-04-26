@@ -189,8 +189,6 @@ if args.help:
     print(help_msg)
     exit()
 
-standard_char_set = 'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ12345678901234567890-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"'
-
 with open('char_sets.json') as f:
     char_set = json.load(f)
 
@@ -208,22 +206,8 @@ colors_str = {
 start_color = colors_str[args.color]
 start_bg = colors_str[args.bg_color]
 
-if not args.speed:
-    start_delay = 40 
-elif args.speed == 'slower':
-    start_delay = 240
-elif args.speed == 'slow':
-    start_delay = 120
-elif args.speed == 'fast':
-    start_delay = 20 
-elif args.speed == 'faster':
-    start_delay = 5 
-else:
-    try:
-        start_delay = int(args.speed)
-    except ValueError:
-        print("Enter a valid value for speed")
-        exit(1)
+speed = args.speed
+start_delay = (100 - speed) * 10
 
 runtime = None
 
@@ -247,7 +231,7 @@ elif args.custom_characters:
 
 # Neither "-l" nor "-u" has been set, use default characters
 else:
-    chars = char_set['m']
+    chars = 'ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ12345678901234567890-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"'
 
 if args.no_bold:
     args.all_bold = False
