@@ -16,6 +16,6 @@ setup(
         setup_requires=['setuptools_scm'],
         py_modules=['unimatrix'],
         entry_points={
-            'console_scripts': ['unimatrix=main:main'],
+            'console_scripts': ['unimatrix-app:main'],
         }
 )
