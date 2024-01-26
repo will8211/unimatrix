@@ -169,5 +169,8 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# Nix flakes
+flake.lock
+
 
 # End of https://www.gitignore.io/api/emacs,python
