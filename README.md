@@ -33,7 +33,7 @@ Users of NixOS and Nix Package Manager can use fetchGit in both configuration.ni
 
 let
   unimatrix = import (builtins.fetchGit {
-    url = "https://github.com/avrahambenaram/unimatrix";
+    url = "https://github.com/will8211/unimatrix";
     name = "unimatrix";
   }) { inherit pkgs; };
 in
@@ -50,7 +50,7 @@ in
 
 let
   unimatrix = import (builtins.fetchGit {
-    url = "https://github.com/avrahambenaram/unimatrix";
+    url = "https://github.com/will8211/unimatrix";
     name = "unimatrix";
   }) { inherit pkgs; };
 in
@@ -68,7 +68,7 @@ It's also possible to install it with flakes in home-manager or configuration.ni
 # flake.nix
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-  inputs.unimatrix.url = "github:avrahambenaram/unimatrix";
+  inputs.unimatrix.url = "github:will8211/unimatrix";
 }
 ```
 
