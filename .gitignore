@@ -171,6 +171,7 @@ venv.bak/
 
 # Nix flakes
 flake.lock
+result/
 
 
 # End of https://www.gitignore.io/api/emacs,python
