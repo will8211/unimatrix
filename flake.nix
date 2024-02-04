@@ -5,20 +5,17 @@
 
   outputs = { self, nixpkgs }:
   let
-    systems = [ "x86_64-linux" "aarch64-linux" "i686-linux" "x86_64-darwin" ];
-    systemPackageBuilder = system:
-      let
-        pkgs = import nixpkgs { inherit system; };
-      in
-      {
-        ${system} = {
-          unimatrix = import ./default.nix { inherit pkgs; };
-          default = self.packages.${system}.unimatrix;
-        };
-      };
-    systemPackages = builtins.map systemPackageBuilder systems;
+    forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
   in
   {
-    packages = builtins.foldl' (a: b: a // b) {} systemPackages;
+    packages = forAllSystems (system:
+    let
+      pkgs = import nixpkgs { inherit system; };
+      unimatrix = import ./default.nix { inherit pkgs; };
+    in
+    {
+      inherit unimatrix;
+      default = unimatrix;
+    });
   };
 }
