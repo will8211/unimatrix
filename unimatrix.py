@@ -196,7 +196,7 @@ parser.add_argument('-o', '--status-off',
 parser.add_argument('-s', '--speed',
                     help='speed, integer up to 100. Default=85',
                     default=85,
-                    type=int)
+                    type=float)
 parser.add_argument('-t', '--time',
                     help='time. See details below',
                     type=int)
@@ -252,7 +252,7 @@ start_color = colors_str[args.color]
 start_bg = colors_str[args.bg_color]
 
 speed = args.speed
-start_delay = (100 - speed) * 10
+start_delay = int((100 - speed) * 10)
 
 runtime = None
 
