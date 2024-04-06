@@ -25,6 +25,22 @@ pip install git+https://github.com/will8211/unimatrix.git
 
 Users of Arch-based distros can get it from the AUR as ```unimatrix-git```, although it might not be the most recent version.
 
+### User install (without sudo)
+
+With curl:
+
+```
+curl -L https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -o ~/.local/bin/unimatrix
+chmod a+rx ~/.local/bin/unimatrix
+```
+
+With wget:
+
+```
+wget https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -O ~/.local/bin/unimatrix
+chmod a+rx ~/.local/bin/unimatrix
+```
+
 # Nix
 Users of NixOS and Nix Package Manager can use fetchGit in both configuration.nix and home-manager to install it
 ```nix
