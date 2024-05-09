@@ -29,7 +29,7 @@ import curses
 import time
 from random import choice, randint
 
-help_msg = '''
+help_msg = r'''
 USAGE
   unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-l CHARACTER_LIST] [-n]
             [-o] [-s SPEED] [-u CUSTOM_CHARACTERS]
@@ -228,13 +228,13 @@ char_set = {
          '1234567890-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"',
     'n': '1234567890',
     'o': 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890'
-         '`-=~!@#$%^&*()_+[]{}|\;\':",./<>?"',
+         r'`-=~!@#$%^&*()_+[]{}|\;\':",./<>?"',
     'p': '',
     'P': '',
     'r': 'mcclllxxxxvvvvviiiiii',
     'R': 'MCCLLLXXXXVVVVVIIIIII',
     's': '-=*_+|:<>"',
-    'S': '`-=~!@#$%^&*()_+[]{}|\;\':",./<>?"',
+    'S': r'`-=~!@#$%^&*()_+[]{}|\;\':",./<>?"',
     'u': args.custom_characters}
 
 colors_str = {
