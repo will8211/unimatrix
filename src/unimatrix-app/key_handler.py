@@ -57,7 +57,7 @@ class KeyHandler:
             on_off = 'off' if self.args.flashers_off else 'on'
             self.stat.update('Flash: %s' % on_off, self.delay)
         elif kp == ord('o'):
-            self.toggle_status()
+            self.toggle_status(self.args)
 
         # Speed control
         elif kp == ord('-') or kp == ord('_') or kp == curses.KEY_LEFT:
@@ -140,7 +140,7 @@ class KeyHandler:
         """
         self.stat.update('Speed: %d' % (100 - self.delay // 10), self.delay)
 
-    def toggle_status(self):
+    def toggle_status(self, args):
         """
         On 'o' keypress, turn status display on or off
         """
