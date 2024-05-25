@@ -177,6 +177,8 @@ CHARACTER SETS
 
   a   Lowercase alphabet
   A   Uppercase alphabet
+  b   Lowercase Glagolitic alphabet
+  B   Uppercase Glagolitic alphabet
   c   Lowercase Russian Cyrillic alphabet
   C   Uppercase Russian Cyrillic alphabet
   e   A few common emoji ( ☺☻✌♡♥❤⚘❀❃❁✼☀✌♫♪☃❄❅❆☕☂★ )
