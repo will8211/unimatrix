@@ -60,7 +60,7 @@ OPTIONAL ARGUMENTS
                        refreshing, 100 uses none. Use negative numbers for
                        even lower speeds. Default=85
 
-  -S SPACE             Integer up to 5. space between coloumns 
+  -S SPACE             Integer up to 5. Space between columns
 
   -t TIME              Exit the process after TIME seconds
 
