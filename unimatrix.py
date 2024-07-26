@@ -108,7 +108,7 @@ CHARACTER SETS
   r   Lowercase Roman numerals ( mcclllxxxxvvvvviiiiii )
   R   Uppercase Roman numerals ( MCCLLLXXXXVVVVVIIIIII )
   s   A subset of symbols actually used in the Matrix films ( -=*_+|:<>" )
-  S   All common keyboard symbols ( `-=~!z#$%^&*()_+[]{}|\;':",./<>?" )
+  S   All common keyboard symbols ( `-=~!z#$%^&*()_+[]{}|\\;':",./<>?" )
   u   Custom characters selected using -u switch
 
   For example: '-l naAS' or '--character-list=naAS' will give something similar
@@ -228,13 +228,13 @@ char_set = {
          '1234567890-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"',
     'n': '1234567890',
     'o': 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890'
-         '`-=~!@#$%^&*()_+[]{}|\;\':",./<>?"',
+         '`-=~!@#$%^&*()_+[]{}|\\;\':",./<>?"',
     'p': '',
     'P': '',
     'r': 'mcclllxxxxvvvvviiiiii',
     'R': 'MCCLLLXXXXVVVVVIIIIII',
     's': '-=*_+|:<>"',
-    'S': '`-=~!@#$%^&*()_+[]{}|\;\':",./<>?"',
+    'S': '`-=~!@#$%^&*()_+[]{}|\\;\':",./<>?"',
     'u': args.custom_characters}
 
 colors_str = {
