@@ -62,6 +62,8 @@ OPTIONAL ARGUMENTS
                        refreshing, 100 uses none. Use negative numbers for
                        even lower speeds. Default=85
 
+  -S SPACE             Integer up to 5. Space between columns
+
   -t TIME              Exit the process after TIME seconds
 
   -u CUSTOM_CHARACTERS Your own string of characters to display. Enclose in
@@ -82,6 +84,7 @@ LONG ARGUMENTS
   -i --ignore-keyboard
   -l --character-list=CHARACTER_LIST
   -s --speed=SPEED
+  -S --space=space
   -n --no-bold
   -o --status-off
   -t --time
@@ -110,6 +113,7 @@ CHARACTER SETS
   s   A subset of symbols actually used in the Matrix films ( -=*_+|:<>" )
   S   All common keyboard symbols ( `-=~!z#$%^&*()_+[]{}|\\;':",./<>?" )
   u   Custom characters selected using -u switch
+  z   chinese characters
 
   For example: '-l naAS' or '--character-list=naAS' will give something similar
   to the output of the original cmatrix program in its default mode.
@@ -207,6 +211,10 @@ parser.add_argument('-u', '--custom-characters',
 parser.add_argument('-w', '--single-wave',
                     help='runs a single "wave" of green rain then exits',
                     action='store_true')
+parser.add_argument('-S', '--space',
+                    help='space, integer up to 5. Default=1',
+                    default=1,
+                    type=int)
 
 args = parser.parse_args()
 
@@ -237,6 +245,12 @@ char_set = {
     'S': '`-=~!@#$%^&*()_+[]{}|\\;\':",./<>?"',
     'u': args.custom_characters}
 
+zhcn_chars=""
+for ch in range(0x4e00, 0x9fa6): 
+    zhcn_chars += chr(ch)
+#    zhcn_chars +=" "
+char_set["z"]=zhcn_chars
+
 colors_str = {
     'green': curses.COLOR_GREEN,
     'red': curses.COLOR_RED,
@@ -252,6 +266,11 @@ start_color = colors_str[args.color]
 start_bg = colors_str[args.bg_color]
 
 speed = args.speed
+
+width_space = args.space
+if width_space >5 :
+    width_space=5
+
 start_delay = (100 - speed) * 10
 
 runtime = None
@@ -299,7 +318,8 @@ class Canvas:
         self.row_count = rows
         self.size_changed = False
         self.columns = []
-        for col in range(0, cols, 2):
+        #for col in range(0, cols, 2):
+        for col in range(0, cols, width_space*2):
             self.columns.append(Column(col, self.row_count))
         self.nodes = []
         self.flashers = set()
