@@ -74,6 +74,11 @@ OPTIONAL ARGUMENTS
                        exits. You can put in a .bashrc file to run when your
                        terminal launches. Works well with speed at 95.
 
+  -x                   Smooth exit : When exiting, instead of simply shutdown,
+                       waits for the screen for being clean. Still can
+                       emergency quit with esc or double space/q.
+
+
 LONG ARGUMENTS
   -a --asynchronous-off
   -b --all-bold
@@ -87,11 +92,12 @@ LONG ARGUMENTS
   -n --no-bold
   -o --status-off
   -t --time
-  -u --custom_characters=CUSTOM_CHARACTERS
-  -w --single_wave
+  -u --custom-characters=CUSTOM_CHARACTERS
+  -w --single-wave
+  -x --smooth-exit
 
 CHARACTER SETS
-  When using '-l' or '--character_list=' option, follow it with one or more of
+  When using '-l' or '--character-list=' option, follow it with one or more of
   the following letters:
 
   a   Lowercase alphabet
@@ -110,10 +116,10 @@ CHARACTER SETS
   r   Lowercase Roman numerals ( mcclllxxxxvvvvviiiiii )
   R   Uppercase Roman numerals ( MCCLLLXXXXVVVVVIIIIII )
   s   A subset of symbols actually used in the Matrix films ( -=*_+|:<>" )
-  S   All common keyboard symbols ( `-=~!z#$%^&*()_+[]{}|\;':",./<>?" )
+  S   All common keyboard symbols ( `-=~!z#$%^&*()_+[]{}|\\;':",./<>?" )
   u   Custom characters selected using -u switch
 
-  For example: '-l naAS' or '--character_list=naAS' will give something similar
+  For example: '-l naAS' or '--character-list=naAS' will give something similar
   to the output of the original cmatrix program in its default mode.
   '-l ACG' will use all the upper-case character sets. Use the same
   letter multiple times to increase the frequency of the character set. For
@@ -209,6 +215,9 @@ parser.add_argument('-u', '--custom-characters',
 parser.add_argument('-w', '--single-wave',
                     help='runs a single "wave" of green rain then exits',
                     action='store_true')
+parser.add_argument('-x', '--smooth_exit',
+                    help='exits the animation smoothly',
+                    action='store_true')
 
 args = parser.parse_args()
 
@@ -230,13 +239,13 @@ char_set = {
          '1234567890-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"-=*_+|:<>"',
     'n': '1234567890',
     'o': 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890'
-         '`-=~!@#$%^&*()_+[]{}|\;\':",./<>?"',
+         '`-=~!@#$%^&*()_+[]{}|\\;\':",./<>?"',
     'p': '',
     'P': '',
     'r': 'mcclllxxxxvvvvviiiiii',
     'R': 'MCCLLLXXXXVVVVVIIIIII',
     's': '-=*_+|:<>"',
-    'S': '`-=~!@#$%^&*()_+[]{}|\;\':",./<>?"',
+    'S': '`-=~!@#$%^&*()_+[]{}|\\;\':",./<>?"',
     'u': args.custom_characters}
 
 colors_str = {
@@ -466,8 +475,17 @@ class KeyHandler:
 
         if kp == -1:
             return False
-        elif kp == ord(" ") or kp == ord("q") or kp == 27:  # 27 = ESC
+        elif kp == 27: # 27 = ESC, force quit any time
             exit()
+        elif kp == ord(" ") or kp == ord("q"):
+            if args.smooth_exit and not args.single_wave:
+                args.single_wave = True
+                # displays a status until the end
+                self.stat.update('Ending...', self.delay)
+                rows, cols = self.screen.getmaxyx()
+                self.stat.countdown = self.delay * rows
+            else:
+                exit()
         elif kp == ord('a'):
             args.asynchronous_off = not args.asynchronous_off
             on_off = 'off' if args.asynchronous_off else 'on'
@@ -666,7 +684,7 @@ def _main(screen):
     stat = Status(screen)
     key = KeyHandler(screen, stat)
     # Prevent single_wave mode from shutting down too early:
-    if args.single_wave:
+    if args.single_wave or args.smooth_exit:
         wave_delay = 10
     else:
         wave_delay = 0
@@ -681,7 +699,10 @@ def _main(screen):
         # Loop to draw the green rain
         while not canvas.size_changed:
             if runtime and time.time() - starttime > runtime:
-                exit()
+                if args.smooth_exit:
+                    args.single_wave = True
+                else:
+                    exit()
             # Catch keypress
             if key.get():
                 continue

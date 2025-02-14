@@ -25,6 +25,69 @@ pip install git+https://github.com/will8211/unimatrix.git
 
 Users of Arch-based distros can get it from the AUR as ```unimatrix-git```, although it might not be the most recent version.
 
+### User install (without sudo)
+
+With curl:
+
+```
+curl -L https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -o ~/.local/bin/unimatrix
+chmod a+rx ~/.local/bin/unimatrix
+```
+
+With wget:
+
+```
+wget https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -O ~/.local/bin/unimatrix
+chmod a+rx ~/.local/bin/unimatrix
+```
+
+# Nix
+Users of NixOS and Nix Package Manager can use fetchGit in both configuration.nix and home-manager to install it
+```nix
+# configuration.nix
+{ config, pkgs, lib, ... }:
+
+let
+  unimatrix = import (builtins.fetchGit {
+    url = "https://github.com/will8211/unimatrix";
+    name = "unimatrix";
+  }) { inherit pkgs; };
+in
+{
+  environment.systemPackages = [
+    unimatrix
+    # ... Rest of your packages
+  ];
+  # ... Rest of your configuration
+}
+
+# home.nix
+{ config, pkgs, ... }:
+
+let
+  unimatrix = import (builtins.fetchGit {
+    url = "https://github.com/will8211/unimatrix";
+    name = "unimatrix";
+  }) { inherit pkgs; };
+in
+{
+  home.packages = [
+    unimatrix
+    # ... Rest of your packages
+  ];
+  # ... Rest of your configuration
+}
+
+```
+It's also possible to install it with flakes in home-manager or configuration.nix
+```
+# flake.nix
+{
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.unimatrix.url = "github:will8211/unimatrix";
+}
+```
+
 ## Screenshots
 
 Default settings:
@@ -105,11 +168,11 @@ LONG ARGUMENTS
   -n --no-bold
   -o --status-off
   -t --time
-  -u --custom_characters=CUSTOM_CHARACTERS
-  -w --single_wave
+  -u --custom-characters=CUSTOM_CHARACTERS
+  -w --single-wave
 
 CHARACTER SETS
-  When using '-l' or '--character_list=' option, follow it with one or more of
+  When using '-l' or '--character-list=' option, follow it with one or more of
   the following letters:
 
   a   Lowercase alphabet
@@ -131,7 +194,7 @@ CHARACTER SETS
   S   All common keyboard symbols ( `-=~!z#$%^&*()_+[]{}|\;':",./<>?" )
   u   Custom characters selected using -u switch
 
-  For example: '-l naAS' or '--character_list=naAS' will give something similar
+  For example: '-l naAS' or '--character-list=naAS' will give something similar
   to the output of the original cmatrix program in its default mode.
   '-l ACG' will use all the upper-case character sets. Use the same
   letter multiple times to increase the frequency of the character set. For
