@@ -72,6 +72,11 @@ OPTIONAL ARGUMENTS
                        exits. You can put in a .bashrc file to run when your
                        terminal launches. Works well with speed at 95.
 
+  -x                   Smooth exit : When exiting, instead of simply shutdown,
+                       waits for the screen for being clean. Still can
+                       emergency quit with esc or double space/q.
+
+
 LONG ARGUMENTS
   -a --asynchronous
   -b --all-bold
@@ -87,6 +92,7 @@ LONG ARGUMENTS
   -t --time
   -u --custom-characters=CUSTOM_CHARACTERS
   -w --single-wave
+  -x --smooth-exit
 
 CHARACTER SETS
   When using '-l' or '--character-list=' option, follow it with one or more of
@@ -206,6 +212,9 @@ parser.add_argument('-u', '--custom-characters',
                     type=str)
 parser.add_argument('-w', '--single-wave',
                     help='runs a single "wave" of green rain then exits',
+                    action='store_true')
+parser.add_argument('-x', '--smooth_exit',
+                    help='exits the animation smoothly',
                     action='store_true')
 
 args = parser.parse_args()
@@ -464,8 +473,17 @@ class KeyHandler:
 
         if kp == -1:
             return False
-        elif kp == ord(" ") or kp == ord("q") or kp == 27:  # 27 = ESC
+        elif kp == 27: # 27 = ESC, force quit any time
             exit()
+        elif kp == ord(" ") or kp == ord("q"):
+            if args.smooth_exit and not args.single_wave:
+                args.single_wave = True
+                # displays a status until the end
+                self.stat.update('Ending...', self.delay)
+                rows, cols = self.screen.getmaxyx()
+                self.stat.countdown = self.delay * rows
+            else:
+                exit()
         elif kp == ord('a'):
             args.asynchronous = not args.asynchronous
             on_off = 'on' if args.asynchronous else 'off'
@@ -664,7 +682,7 @@ def _main(screen):
     stat = Status(screen)
     key = KeyHandler(screen, stat)
     # Prevent single_wave mode from shutting down too early:
-    if args.single_wave:
+    if args.single_wave or args.smooth_exit:
         wave_delay = 10
     else:
         wave_delay = 0
@@ -679,7 +697,10 @@ def _main(screen):
         # Loop to draw the green rain
         while not canvas.size_changed:
             if runtime and time.time() - starttime > runtime:
-                exit()
+                if args.smooth_exit:
+                    args.single_wave = True
+                else:
+                    exit()
             # Catch keypress
             if key.get():
                 continue
