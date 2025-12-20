@@ -229,7 +229,7 @@ EXAMPLES
     $ unimatrix -n -s 96 -l o
 
   Use the letters from the name of your favorite operating system in bold blue:
-    $ unimatrix -B -u Linux -c blue
+    $ unimatrix -b -u Linux -c blue
 
   Use default character set, plus dollar symbol (note single quotes around
       special character):
