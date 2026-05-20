@@ -8,6 +8,25 @@ $ unimatrix -n -s 96 -l o
 ```
 ## Install
 
+### Modern Python Installation (Recommended)
+
+Unimatrix now uses modern Python packaging standards with `pyproject.toml`, allowing for a robust installation via `pip` directly from the source directory.
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/will8211/unimatrix.git
+    cd unimatrix
+    ```
+2.  **Install using pip:**
+    ```bash
+    pip install .
+    ```
+
+Alternatively, you can install directly from the GitHub repository:
+```bash
+pip install git+https://github.com/will8211/unimatrix.git
+```
+
 Linux users can use curl to install:
 ```
 sudo curl -L https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -o /usr/local/bin/unimatrix
