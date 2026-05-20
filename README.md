@@ -8,6 +8,25 @@ $ unimatrix -n -s 96 -l o
 ```
 ## Install
 
+### Modern Python Installation (Recommended)
+
+Unimatrix now uses modern Python packaging standards with `pyproject.toml`, allowing for a robust installation via `pip` directly from the source directory.
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/will8211/unimatrix.git
+    cd unimatrix
+    ```
+2.  **Install using pip:**
+    ```bash
+    pip install .
+    ```
+
+Alternatively, you can install directly from the GitHub repository:
+```bash
+pip install git+https://github.com/will8211/unimatrix.git
+```
+
 Linux users can use curl to install:
 ```
 sudo curl -L https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -o /usr/local/bin/unimatrix
@@ -24,6 +43,22 @@ pip install git+https://github.com/will8211/unimatrix.git
 ```
 
 Users of Arch-based distros can get it from the AUR as ```unimatrix-git```, although it might not be the most recent version.
+
+### User install (without sudo)
+
+With curl:
+
+```
+curl -L https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -o ~/.local/bin/unimatrix
+chmod a+rx ~/.local/bin/unimatrix
+```
+
+With wget:
+
+```
+wget https://raw.githubusercontent.com/will8211/unimatrix/master/unimatrix.py -O ~/.local/bin/unimatrix
+chmod a+rx ~/.local/bin/unimatrix
+```
 
 # Nix
 Users of NixOS and Nix Package Manager can use fetchGit in both configuration.nix and home-manager to install it
@@ -213,7 +248,7 @@ EXAMPLES
     $ unimatrix -n -s 96 -l o
 
   Use the letters from the name of your favorite operating system in bold blue:
-    $ unimatrix -B -u Linux -c blue
+    $ unimatrix -b -u Linux -c blue
 
   Use default character set, plus dollar symbol (note single quotes around
       special character):

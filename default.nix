@@ -6,6 +6,10 @@ pkgs.stdenv.mkDerivation rec {
 
   src = ./.;
 
+  buildInputs = with pkgs; [
+    python3
+  ];
+
   phases = "installPhase";
 
   installPhase = ''

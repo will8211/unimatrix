@@ -12,8 +12,7 @@ setup(
         author='William Mannard',
         description='Python script to simulate the display from "The Matrix" in terminal',
         long_description=readme,
-        use_scm_version=True,
-        setup_requires=['setuptools_scm'],
+        version='0.1.0',
         py_modules=['unimatrix'],
         entry_points={
             'console_scripts': ['unimatrix=unimatrix:main'],
