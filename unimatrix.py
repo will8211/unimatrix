@@ -462,7 +462,7 @@ class KeyHandler:
         Handles key presses. Returns True if a key was found, False otherwise.
         """
         if args.ignore_keyboard:
-            return False;
+            return False
 
         kp = self.screen.getch()
 
