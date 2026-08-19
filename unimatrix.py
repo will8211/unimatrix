@@ -32,7 +32,7 @@ from random import choice, randint
 help_msg = r'''
 USAGE
   unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-l CHARACTER_LIST] [-n]
-            [-o] [-s SPEED] [-u CUSTOM_CHARACTERS]
+            [-o] [-s SPEED] [-S] [-u CUSTOM_CHARACTERS]
 
 OPTIONAL ARGUMENTS
   -a                   Asynchronous scroll. Lines will move at varied speeds.
@@ -62,6 +62,9 @@ OPTIONAL ARGUMENTS
                        refreshing, 100 uses none. Use negative numbers for
                        even lower speeds. Default=85
 
+  -S                   Screensaver mode: any key press exits (like
+                       'cmatrix -s'). Overrides the normal keyboard controls.
+
   -t TIME              Exit the process after TIME seconds
 
   -u CUSTOM_CHARACTERS Your own string of characters to display. Enclose in
@@ -82,6 +85,7 @@ LONG ARGUMENTS
   -i --ignore-keyboard
   -l --character-list=CHARACTER_LIST
   -s --speed=SPEED
+  -S --screensaver
   -n --no-bold
   -o --status-off
   -t --time
@@ -127,6 +131,8 @@ CHARACTER SETS
     .Xresources for older terminals, such as urxvt and xterm.
 
 KEYBOARD CONTROL
+  (In screensaver mode (-S), any key press exits instead of the below.)
+
   SPACE, CTRL-c or q   exit
   - or LEFT            decrease speed by 1
   + or RIGHT           increase speed by 1
@@ -199,6 +205,9 @@ parser.add_argument('-s', '--speed',
                     help='speed, integer up to 100. Default=85',
                     default=85,
                     type=int)
+parser.add_argument('-S', '--screensaver',
+                    action='store_true',
+                    help='screensaver mode: exit on any key press')
 parser.add_argument('-t', '--time',
                     help='time. See details below',
                     type=int)
@@ -468,6 +477,9 @@ class KeyHandler:
 
         if kp == -1:
             return False
+        elif args.screensaver:
+            # Screensaver mode: any key press exits.
+            exit()
         elif kp == ord(" ") or kp == ord("q") or kp == 27:  # 27 = ESC
             exit()
         elif kp == ord('a'):

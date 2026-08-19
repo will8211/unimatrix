@@ -133,7 +133,7 @@ Emulating CMatrix (```unimatrix -n -s 96 -l 'o'```):
 ```
 USAGE
   unimatrix [-a] [-b] [-c COLOR] [-f] [-g COLOR] [-h] [-i] [-l CHARACTER_LIST]
-            [-n] [-o] [-s SPEED] [-u CUSTOM_CHARACTERS]
+            [-n] [-o] [-s SPEED] [-S] [-u CUSTOM_CHARACTERS]
 
 OPTIONAL ARGUMENTS
   -a                   Asynchronous scroll. Lines will move at varied speeds.
@@ -163,6 +163,9 @@ OPTIONAL ARGUMENTS
                        refreshing, 100 uses none. Use negative numbers for
                        even lower speeds. Default=85
 
+  -S                   Screensaver mode: any key press exits (like
+                       'cmatrix -s'). Overrides the normal keyboard controls.
+
   -t TIME              Exit the process after TIME seconds
 
   -u CUSTOM_CHARACTERS Your own string of characters to display. Enclose in
@@ -184,6 +187,7 @@ LONG ARGUMENTS
   -i --ignore-keyboard
   -l --character-list=CHARACTER_LIST
   -s --speed=SPEED
+  -S --screensaver
   -n --no-bold
   -o --status-off
   -t --time
@@ -229,6 +233,8 @@ CHARACTER SETS
     .Xresources for older terminals, such as urxvt and xterm.
 
 KEYBOARD CONTROL
+  (In screensaver mode (-S), any key press exits instead of the below.)
+
   SPACE, CTRL-c or q   exit
   - or LEFT            decrease speed by 1
   + or RIGHT           increase speed by 1
