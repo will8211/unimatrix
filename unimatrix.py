@@ -652,7 +652,12 @@ class Writer:
         Draws characters, included spaces to overwrite/erase characters.
         """
         color = curses.color_pair(1)
-        attr = choice([curses.A_BOLD, curses.A_NORMAL])
+        if args.no_bold:
+            attr = curses.A_NORMAL
+        elif args.all_bold:
+            attr = curses.A_BOLD
+        else:
+            attr = choice([curses.A_BOLD, curses.A_NORMAL])
         y = flasher[0]
         x = flasher[1]
         try:
